@@ -2,3 +2,7 @@
 # KHÔNG cần pip install để chạy.
 # Nhóm dùng thêm thư viện (vd SDK của nhà cung cấp model) thì ghi tên gói vào đây, mỗi dòng một gói,
 # và ghi lệnh cài vào README: python -m pip install -r requirements.txt
+
+# Chỉ cần cho evidence/mine_reviews.py (đào review Google Play) — bản chạy thử không dùng
+google-play-scraper==1.2.7
+pandas==3.1.1
