@@ -61,5 +61,5 @@
 | Xử lý những bước gì | Mở trang chủ, xác nhận tiêu đề / chân trang đúng tổ chức, ghi tên miền sau khi chuyển hướng (bỏ `www.`) · Cột: `ten_mien, to_chuc, nguon, ngay_xem, ghi_chu` |
 | Số dòng / số đoạn | 11 tên miền |
 | Phiên bản / ngày lấy | Ngày xem 27/11/2026 |
-| Nhãn | **thật** · kiểm bằng AI đọc trang chủ; **`mbbank.com.vn` chưa xác nhận tự động được (trang trả 403) — [CHỜ PHÁT kiểm tay bằng trình duyệt]** |
+| Nhãn | **thật** · kiểm bằng AI đọc trang chủ; riêng `mbbank.com.vn` chặn truy cập tự động (403) nên được mở tay bằng trình duyệt và xác nhận ngày 27/11/2026 |
 | Giới hạn | Mỗi tổ chức chỉ 1 tên miền chính; tổ chức có nhiều tên miền khác (tên miền phụ, cũ, chiến dịch) sẽ bị trả `"không có trong dữ liệu"` · tên miền chính thức **không** chứng minh tin nhắn là thật (kẻ gian có thể chèn link thật vào tin giả, hoặc dùng `@` trong URL) |
