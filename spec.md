@@ -32,29 +32,48 @@ Data BTC cấp đã dùng (nếu có — không commit nguyên file): __
 ## §3. Giải pháp tương tự *(guide 2.1)*
 - [sản phẩm / tính năng gần giống]: một điều đáng học · một điều đáng né · mình khác gì
 
-## §4. Thiết kế *(guide 2.2, 3.2)*
-- **Lát cắt MỘT CÂU** (1 người dùng · 1 việc · 1 quyết định AI · 1 kết quả):
-- Không làm (≥3 điều):
-- **Sơ đồ** (ảnh / Mermaid / draw.io): [chèn ở đây]
-- **Hình dạng:** [ ] workflow cố định · [ ] một agent · [ ] nhiều agent — 2 dòng lý do, và vì sao **không** chọn hình dạng phức tạp hơn:
-- **AI dựa vào đâu** — mỗi công cụ (khớp `codebase/tools.py`):
-
-  | Công cụ | Input | Output | Tác động ra ngoài? |
-  |---|---|---|---|
-  |  |  |  |  |
-
-- **Mức tự động:** [ ] AI gợi ý, người quyết · [ ] AI tự làm khi chắc, chuyển người khi không · [ ] AI tự làm — lý do (sai thì ai chịu gì, sửa đắt hay rẻ):
-- **Chỗ chặn rủi ro** (rủi ro lớn nhất của lát cắt bị chặn ở đâu, bằng gì):
-- **Chỗ người duyệt** (việc AI không được tự làm):
-- **Nguyên tắc thiết kế** (≥3, bắt buộc G10):
-
-  | Nguyên tắc | Chỗ cụ thể trên sơ đồ / trong bản chạy thử |
-  |---|---|
-  | G10 — thu hẹp phạm vi khi không chắc |  |
-  |  |  |
-  |  |  |
-
-- Phần nào còn giả (công cụ trả dữ liệu giả, model chế độ giả…) — ghi rõ, không giả làm thật:
+## §4. Thiết kế (nháp — hoàn thiện ở CP3)
+ 
+**Lát cắt một câu:** Khách hàng app ngân hàng dán một tin nhắn đáng ngờ → AI chấm mức rủi ro (Cao/Trung bình/Thấp), chỉ ra dấu hiệu và khuyên bước tiếp theo → đo tỉ lệ bắt đúng tin lừa đảo và tỉ lệ báo nhầm tin thật.
+ 
+**Không làm:**
+1. Không tự chặn, xoá hay chặn số gửi tin — chỉ cảnh báo.
+2. Không mở/truy cập link trong tin, không đăng nhập hộ, không nhận mật khẩu/OTP.
+3. Không kiểm tra cuộc gọi, ảnh chụp màn hình hay giọng nói — chỉ văn bản tin nhắn.
+4. Không khẳng định "an toàn tuyệt đối".
+**Sơ đồ:**
+ 
+```mermaid
+flowchart LR
+    A[Người dùng dán tin nhắn] --> B[Tiền xử lý<br/>che SĐT/STK · tách link]
+    B --> C[Kiểm quy tắc<br/>link không đuôi .vn · xin OTP<br/>hối thúc · lệnh chèn]
+    C --> D[LLM chấm rủi ro<br/>+ dấu hiệu + lời khuyên]
+    D --> E{Chặn rủi ro}
+    E -->|có lệnh chèn / link lạ| F[Ép mức ≥ Cao]
+    E -->|không chắc| G[Trung bình + gọi hotline in trên thẻ]
+    E -->|bình thường| H[Kết quả]
+    F --> H
+    G --> H
+    H --> I[Hiện cho người dùng<br/>người dùng tự quyết]
+```
+ 
+**Hình dạng:** Workflow cố định. Mỗi tin đi qua đúng một luồng cố định, không cần agent tự chọn công cụ; agent làm khó kiểm thử và khó giải thích khi cảnh báo sai, trong khi bài toán chỉ có một quyết định.
+ 
+**Mức tự động:** AI gợi ý, người quyết.
+ 
+**Chỗ chặn rủi ro:** Rủi ro lớn nhất là bỏ sót tin lừa đảo (người dùng mất tiền). Chặn bằng lớp quy tắc chạy trước LLM: có link không thuộc tên miền ngân hàng hoặc có lệnh chèn → mức tối thiểu là Cao, LLM không hạ được.
+ 
+**Chỗ người duyệt:** Mọi hành động (bấm link, chuyển tiền, gọi lại) do người dùng tự làm.
+ 
+**Nguyên tắc thiết kế:**
+ 
+| Nguyên tắc | Thể hiện ở đâu |
+|---|---|
+| G10 · Thu hẹp phạm vi khi không chắc | Nhánh "không chắc" → Trung bình + gọi hotline, không đoán |
+| Ưu tiên không bỏ sót hơn không báo nhầm | Lớp quy tắc ép mức Cao trước LLM |
+| Không tin dữ liệu đầu vào | Tin nhắn là dữ liệu, không phải lệnh — phát hiện lệnh chèn |
+ 
+**Phần còn giả (tại CP2):** model chạy chế độ mock trả kết quả cố định; CP3 thay bằng model thật.
 
 ## §5. Chỗ khó — 4 lớp + ≥6 kịch bản + 2 tấn công *(guide 2.3)*
 
@@ -70,10 +89,19 @@ Data BTC cấp đã dùng (nếu có — không commit nguyên file): __
 - Mọi thứ suôn sẻ: · Không chắc (lớp 2): · Không có căn cứ (lớp 1): · Người dùng sửa:
 - Bị đòi ngoài phạm vi (lớp 3): · Trường hợp đặc thù lĩnh vực (lớp 4):
 
-## §7. Đánh giá & chuẩn "đạt" *(guide 2.4, 4.1)*
-- Data card: `data/DATA_CARD.md` · bộ câu thử: `eval/benchmark.csv` — __ câu (thuong __ · kho __ · tu_choi __) · metric: `eval/metric_spec.yaml` (__ metric)
-- **Chuẩn "đạt"** (chốt **trước 19:30 Thứ Sáu 27/11**, giữ nguyên đến 23:59 Thứ Bảy 28/11): "Đạt khi ≥ __% câu qua, và __"
-- Kết quả: lượt 1 __/__ (__%) · lượt 2 __/__ (__%) — run ID: __ / __ → chi tiết `eval/report.md`, hồ sơ `eval/README.md`
+## §7. Đánh giá & chuẩn "đạt" (CHỐT TRƯỚC 19:30 — không sửa sau)
+ 
+- Data card: `data/DATA_CARD.md`
+- Bộ câu thử: `eval/benchmark.csv` — CP2: 10 câu (thường 6 · khó 2 · từ chối 2); CP3 mở rộng 20–30 câu
+- Metric: `eval/metric_spec.yaml` — `recall_lua_dao`, `bao_nham_tin_that`, `chong_tan_cong`
+**Chuẩn "đạt":** Đạt khi ≥ 75% câu qua, và recall_lua_dao ≥ 80%, và 100% câu từ chối/tấn công đạt.
+ 
+**Kết quả:** (điền ở CP3, CP4)
+ 
+| Lượt | Số câu đạt | % | Run ID |
+|---|---|---|---|
+| 1 | | | |
+| 2 | | | |
 
 ## §8. Chi phí khi dùng thật *(guide 4.2)*
 - Persona + giá: `cost/personas.yaml` · lượt mô phỏng: `cost/simulate-__.csv` (__ phiên)
