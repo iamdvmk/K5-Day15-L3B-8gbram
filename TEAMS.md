@@ -11,10 +11,10 @@
 
 | STT | Họ và tên | Mã học viên | Vai trò | Phần việc chính |
 |---|---|---|---|---|
-| 1 | Đào Vũ Minh Khánh | 2A202603878 | Đội trưởng | ____ |
-| 2 | Đào Nguyễn Quang Thành | 2A202603754 | Thành viên | ____ |
-| 3 | Trương Đức Phát | 2A202603757 | Thành viên | ____ |
-| 4 | Nguyễn Long Vũ | 2A202603842 | Thành viên | ____ |
+| 1 | Đào Vũ Minh Khánh | 2A202603878 | Đội trưởng | Spec, guardrail, slide & thuyết trình |
+| 2 | Đào Nguyễn Quang Thành | 2A202603754 | Thành viên | Dựng luồng AI: run.py, prompt, gọi model, video demo |
+| 3 | Trương Đức Phát | 2A202603757 | Thành viên | Bằng chứng pain: đào review, evidence, DATA_CARD |
+| 4 | Nguyễn Long Vũ | 2A202603842 | Thành viên | Eval & chi phí: benchmark, metric, eval 2 lượt, simulate |
 
 **Quy tắc điền**
 - **Lớp:** `L3A` hoặc `L3B`. **Track:** một chữ `A` (EdTech), `B` (Y tế), `C` (Du lịch), `D` (Thương mại điện tử), `E` (Tài chính) hoặc `F` (Làn khác). **Link repo:** link GitHub công khai của nhóm.
