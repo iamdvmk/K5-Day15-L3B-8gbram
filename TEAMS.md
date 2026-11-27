@@ -6,7 +6,7 @@
 
 - Tên nhóm: 8gbram
 - Lớp: L3B
-- Track: ____
+- Track: E
 - Link repo: https://github.com/iamdvmk/K5-Day15-L3B-8gbram
 
 | STT | Họ và tên | Mã học viên | Vai trò | Phần việc chính |
