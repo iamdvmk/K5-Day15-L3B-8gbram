@@ -17,7 +17,10 @@ Chế độ giả (mặc định khi .env chưa có MODEL_PROVIDER, hoặc MODEL
 Nối model thật: điền .env (chép từ .env.example), rồi viết nhánh gọi API ở dưới theo docs/connect-model.md
 (có ví dụ OpenAI, Claude, model chạy trên máy, và cách nối nhà cung cấp khác). Không dán API key vào file này.
 """
+import json
 import os
+import urllib.error
+import urllib.request
 
 from tracing import model_call
 
@@ -43,14 +46,62 @@ MODEL_NAME = (os.environ.get("MODEL_NAME") or "").strip()
 API_KEY = (os.environ.get("API_KEY") or "").strip()
 
 
+def _post_json(url: str, headers: dict, body: dict) -> dict:
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(body, ensure_ascii=False).encode("utf-8"),
+        headers={"Content-Type": "application/json", **headers},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=60) as response:
+            return json.load(response)
+    except urllib.error.HTTPError as error:
+        detail = error.read().decode("utf-8", "replace")[:300]
+        raise RuntimeError("Model API HTTP %s: %s" % (error.code, detail)) from error
+
+
+def _call_openai(system: str, user: str) -> dict:
+    messages = ([{"role": "system", "content": system}] if system else []) + [{"role": "user", "content": user}]
+    data = _post_json(
+        "https://api.openai.com/v1/chat/completions",
+        {"Authorization": "Bearer " + API_KEY},
+        {"model": MODEL_NAME, "messages": messages, "max_completion_tokens": 600},
+    )
+    usage = data["usage"]
+    return {
+        "text": data["choices"][0]["message"]["content"] or "",
+        "model": data.get("model") or MODEL_NAME,
+        "tokens_in": usage["prompt_tokens"],
+        "tokens_out": usage["completion_tokens"],
+    }
+
+
+def _call_anthropic(system: str, user: str) -> dict:
+    data = _post_json(
+        "https://api.anthropic.com/v1/messages",
+        {"x-api-key": API_KEY, "anthropic-version": "2023-06-01"},
+        {"model": MODEL_NAME, "max_tokens": 600, "system": system, "messages": [{"role": "user", "content": user}]},
+    )
+    usage = data["usage"]
+    return {
+        "text": "".join(block.get("text", "") for block in data["content"] if block.get("type") == "text"),
+        "model": data.get("model") or MODEL_NAME,
+        "tokens_in": usage["input_tokens"],
+        "tokens_out": usage["output_tokens"],
+    }
+
+
 @model_call
 def call_model(system: str, user: str) -> dict:
     if MODEL_PROVIDER == "fake":
         last = (user.strip().splitlines() or [""])[-1]
         return {"text": "[câu trả lời giả — chưa nối model] " + last[:60], "model": "fake", "tokens_in": 0, "tokens_out": 0}
 
-    # NHÓM VIẾT: gọi model thật ở đây (theo MODEL_PROVIDER, MODEL_NAME, API_KEY) rồi trả đúng 4 khoá.
-    # Ví dụ chép được cho từng nhà cung cấp: docs/connect-model.md mục 2.
-    raise NotImplementedError(
-        "chưa viết phần gọi model thật cho MODEL_PROVIDER=%s trong codebase/ai.py — xem docs/connect-model.md"
-        % MODEL_PROVIDER)
+    if not API_KEY or not MODEL_NAME:
+        raise RuntimeError("Thiếu API_KEY hoặc MODEL_NAME trong .env")
+    if MODEL_PROVIDER == "openai":
+        return _call_openai(system, user)
+    if MODEL_PROVIDER == "anthropic":
+        return _call_anthropic(system, user)
+    raise ValueError("MODEL_PROVIDER chưa hỗ trợ: " + MODEL_PROVIDER)

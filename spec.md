@@ -131,7 +131,10 @@ flowchart LR
 
 | Thời điểm | Đổi gì | Vì sao (trỏ về câu thử / lỗi / bằng chứng nào) |
 |---|---|---|
-|  |  |  |
+| 27/11, sau CP2 (giờ chi tiết chưa ghi) | Thành nối model thật trong `ai.py`, thay mock bằng quyết định model trong `agent.py`; mở rộng che bí mật và nhận diện link trong `tools.py` | CP3 yêu cầu demo gọi AI thật; các ca thử B01, B05, B09, B10, B17, B18, B23 và ca ngoài benchmark đã được kiểm cục bộ |
+| 27/11 21:52 | Thành bổ sung chặn OTP, fallback Trung bình, lời khuyên hotline, lọc output và `tra_ten_mien`; thêm test hồi quy | Đối chiếu CP3_TODO: tin mơ hồ từng trả Thấp, OTP chỉ được che nhưng thiếu lời khuyên, chưa có công cụ tra miền |
+| 27/11 21:52 | Thành cập nhật README và `docs/ai-usage.md`; chạy mô phỏng chi phí | CP3 yêu cầu người ngoài chạy được và khai rõ AI đã hỗ trợ phần code/prompt |
+| 27/11 21:55 | Thành chạy `python run.py simulate`: 50/50 phiên không lỗi, tạo `cost/simulate-1.csv`, bản tóm tắt và trace | Kiểm luồng chi phí CP3; `cost/personas.yaml` còn số và giá ví dụ, chưa có lượt eval đã chấm nên chưa thể kết luận chi phí / task thành công |
 
 **Sau CP4 (đến 23:59 Thứ Bảy 28/11)** (sửa theo góp ý — không sửa chuẩn "đạt", câu thử, số bằng chứng, kết quả các lượt đã chạy)
 
