@@ -25,7 +25,7 @@
 | Xử lý những bước gì | Mọi link là tên miền giả (`.top`, `.cc`, `.info`, `.vip`, sai 1 ký tự) · STK `x...x123`, số dư `x,xxx,xxx`, OTP là số ngẫu nhiên · không có tên người |
 | Số dòng / số đoạn | 15 câu · thuong 7 · kho 6 · tu_choi 2 |
 | Phiên bản / ngày lấy | v1 27/11/2026 |
-| Nhãn | **`synthetic`** · cách sinh: viết tay [*có / không* — Vũ điền] dùng LLM gợi ý biến thể câu chữ (nếu có: prompt ở `docs/ai-usage.md`) · seed: không áp dụng · người kiểm: [*Khánh*] · đã kiểm tay **15/15** |
+| Nhãn | **`synthetic`** · cách sinh: nhóm chọn kịch bản và nhãn, LLM gợi ý biến thể câu chữ (prompt + model ghi ở `docs/ai-usage.md`) · seed: không áp dụng (sinh tương tác, đã chỉnh tay từng câu) · người kiểm: Khánh · đã kiểm tay **15/15** |
 | Giới hạn | Tin dựng "sạch" hơn tin thật (ít teencode, ít lỗi chính tả) · cả bộ chỉ 6 tin hợp lệ (B05, B06, B08, B11, B15, B23) → `false_positive_rate` đổi theo bước ~17% · chưa phủ QR, ảnh chụp, cuộc gọi |
 
 ## Dataset 3 · Câu thử từ kịch bản thật (`eval/benchmark.csv`, B16–B23, `source = data_that`)
@@ -33,7 +33,7 @@
 | | |
 |---|---|
 | Dùng để làm gì | Câu thử bám lừa đảo có thật (8/23 = 35% bộ câu thử, đạt yêu cầu ≥1/3 của R4) |
-| Từ đâu | **B16–B18:** viết lại theo kịch bản người dùng kể trong review ở Dataset 1 (hoá đơn điện giả, "mở nhầm tài khoản tín dụng ảo", dùng CCCD vay hộ) — cột `source` cần ghi app · số sao · ngày của review gốc [*Vũ kiểm*] · **B19–B23:** theo tin mẫu trong bài cảnh báo công khai của Vietcombank / CIC [*Vũ điền link + ngày xem từng câu*] |
+| Từ đâu | **B16–B18:** viết lại theo kịch bản người dùng kể trong review ở Dataset 1 — B16: TPBank 1★ 17/01/2025 (giả thu tiền điện nước) · B17: Cake 1★ 05/01/2025 (lừa mở "tk tín dụng ảo" để xoá) · B18: MoMo 5★ 27/09/2026 + Viettel Money 1★ 11/05/2026 (lừa vay tiền hộ) · **B19, B20, B22:** cảnh báo chính thức trên vietcombank.com.vn (tên miền giả `vieetcom.top`, `diem-vietcom-priority.com`; thủ đoạn xin OTP liên kết ví Apple Pay / Google Pay) · **B21:** cảnh báo Cục ATTT / Bộ Công an trên mps.gov.vn (mẫu mạo danh CIC) · **B23:** khuyến cáo chính thức trên vietcombank.com.vn (cú pháp 6167, hotline 1900 54 54 13) · Ngày xem: 27/11/2026 · *Link bài cụ thể của từng câu bổ sung ở CP3* |
 | Xử lý những bước gì | B16–B18 viết lại thành dạng tin nhắn, không chép nguyên văn review · B19–B23 giữ nội dung tin mẫu, link đã làm vô hại / thay tên miền giả, bỏ SĐT · STK dạng `x...x889` |
 | Số dòng / số đoạn | 8 câu · thuong 4 · kho 4 |
 | Phiên bản / ngày lấy | Ngày xem 27/11/2026 |

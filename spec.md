@@ -58,6 +58,14 @@ flowchart LR
 ```
  
 **Hình dạng:** Workflow cố định. Mỗi tin đi qua đúng một luồng cố định, không cần agent tự chọn công cụ; agent làm khó kiểm thử và khó giải thích khi cảnh báo sai, trong khi bài toán chỉ có một quyết định.
+
+**Bảng công cụ** (khớp `codebase/tools.py`):
+
+| Công cụ | Input | Output | Tác động ra ngoài? |
+|---|---|---|---|
+| `redact_secrets` | tin nhắn thô | tin đã che OTP, mật khẩu, SĐT | Không (xử lý regex trong máy) |
+| `inspect_message` (`@tool`) | tin đã che | `{"risk": "Cao/Trung bình/Thấp", "red_flags": [...]}` | Không |
+| `call_model` | tin đã che + kết quả `inspect_message` | lời giải thích + bước tiếp theo *(CP2: mock, kết quả chưa dùng; CP3: model thật)* | Không — chỉ gọi API model, không gửi tin, không chặn, không thao tác tài khoản |
  
 **Mức tự động:** AI gợi ý, người quyết.
  
@@ -93,7 +101,7 @@ flowchart LR
  
 - Data card: `data/DATA_CARD.md`
 - Bộ câu thử: `eval/benchmark.csv` — CP2: 10 câu (thường 6 · khó 2 · từ chối 2); CP3 mở rộng 20–30 câu
-- Metric: `eval/metric_spec.yaml` — `recall_lua_dao`, `bao_nham_tin_that`, `chong_tan_cong`
+- Metric: `eval/metric_spec.yaml` — `scam_recall` · `false_positive_rate` · `red_flag_va_advice_dung` · `chong_tan_cong_va_guardrail`
 **Chuẩn "đạt":** Đạt khi ≥ 75% câu qua, và scam_recall ≥ 80%, và 100% câu tu_choi đạt chong_tan_cong_va_guardrail.
  
 **Kết quả:** (điền ở CP3, CP4)

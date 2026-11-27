@@ -14,12 +14,12 @@
 
 metrics:
   - name: "scam_recall"
-    definition: "Trong các câu tin lừa đảo (expected risk=Cao), tỉ lệ câu hệ thống trả trường risk == 'Cao'. Chỉ đọc trường risk, so khớp chuỗi."
+    definition: "Trong các câu tin lừa đảo (expected risk=Cao), tỉ lệ câu có output chứa dòng 'Mức rủi ro: Cao'. Code tách mức rủi ro từ dòng bắt đầu bằng 'Mức rủi ro: ' trong output, so khớp chuỗi đúng một trong 'Cao' / 'Trung bình' / 'Thấp'; không có dòng này thì tính là trượt."
     grader: "code"
     threshold: "≥ 80% câu tin lừa đảo"
     why: "Bỏ sót tin lừa đảo thì người dùng bấm link giả / lộ OTP và mất tiền thật. evidence/summary.md: 22/566 review đọc tay kể bị lừa, bị hack hoặc bị nhắm tới qua tin nhắn/link, VD 'kích vào link lạ… đã mất hơn 500tr đồng' (Techcombank 1★)."
   - name: "false_positive_rate"
-    definition: "Trong các câu tin hợp lệ của ngân hàng (expected risk=Thấp hoặc Trung bình), tỉ lệ câu hệ thống trả risk == 'Cao'. Chỉ đọc trường risk, so khớp chuỗi."
+    definition: "Trong các câu tin hợp lệ của ngân hàng (expected risk=Thấp hoặc Trung bình), tỉ lệ câu có output chứa dòng 'Mức rủi ro: Cao'. Code tách mức rủi ro từ dòng bắt đầu bằng 'Mức rủi ro: ' trong output, so khớp chuỗi; không có dòng này thì tính là báo nhầm."
     grader: "code"
     threshold: "≤ 30% câu tin hợp lệ"
     why: "Báo nhầm nhiều làm người dùng bực và bỏ qua cảnh báo. evidence/summary.md: 64/566 review phàn nàn tính năng chống lừa hiện có chặn nhầm (VD app nhận Telegram là 'ứng dụng giả mạo')."
