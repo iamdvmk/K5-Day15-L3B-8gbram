@@ -8,16 +8,38 @@
 
 | | |
 |---|---|
-| Dùng để làm gì | **Đào bằng chứng pain** (`evidence/data-mining.md`) · gốc kịch bản cho 3 câu thử `data_that` trong `eval/benchmark.csv` (B16, B17, B18 — tin nhắn được viết lại theo kịch bản người dùng kể trong review, không phải nguyên văn tin nhắn thật) |
-| Từ đâu | Review công khai trên Google Play của 11 app: MoMo, Vietcombank, MB Bank, Techcombank, BIDV, VietinBank, ZaloPay, TPBank, Viettel Money, VNPAY, Cake (`lang=vi`, `country=vn`), kéo bằng thư viện `google-play-scraper` |
-| Xử lý những bước gì | **Kéo:** mỗi app 5.000 review mới nhất + 5.000 "liên quan nhất", bỏ trùng theo `reviewId` → 70.294 review · **Lọc:** giữ review khớp từ khoá ngữ cảnh lừa đảo, máy gợi ý nhóm (`nhom_goi_y`) → 566 review · **Làm sạch:** bỏ xuống dòng trong nội dung · **Ẩn danh:** bỏ tên người viết, ảnh đại diện, `reviewId`; chỉ giữ app, số sao, ngày, nội dung · **Gán nhãn tay:** cột `loai` (7 nhóm) + `dung_chu_de` (1 = người viết / người thân đã bị lừa hoặc bị chiếm TK) · Script: `evidence/mine_reviews.py` |
-| Số dòng / số đoạn | 566 review khớp từ khoá (trên tổng 70.294 review đã kéo) · 22 dòng `dung_chu_de = 1`, trong đó 2 dòng đúng lát cắt tin nhắn / link giả danh |
-| Phiên bản / ngày lấy | Lấy ngày 27/11/2026 · review khớp có ngày từ 30/08/2023 đến 26/11/2026 · `google-play-scraper` 1.2.7 |
-| Nhãn | **thật** (review công khai, đã ẩn danh) · nhãn `loai` / `dung_chu_de` do một thành viên đọc tay, có AI hỗ trợ rà lại (xem `docs/ai-usage.md`) |
-| Giới hạn | Review dùng để chấm app nên phần lớn là phàn nàn lỗi / phí, rất ít người kể chuyện bị lừa → chỉ cho **cận dưới**, không đo được tần suất nhận tin giả · lệch về review 1★ · bộ lọc từ khoá bỏ sót review không dùng từ khoá trong danh sách · chỉ một người gán nhãn, chưa kiểm độ thống nhất · mẫu "liên quan nhất" do thuật toán Google Play chọn, không ngẫu nhiên · chạy lại ở ngày khác ra mẫu số hơi khác vì review mới liên tục |
+| Dùng để làm gì | **Đào bằng chứng pain** (`evidence/data-mining.md`) · gốc kịch bản cho 3 câu thử `data_that` B16–B18 (Dataset 3) |
+| Từ đâu | Review công khai trên Google Play của 11 app: MoMo, Vietcombank, MB Bank, Techcombank, BIDV, VietinBank, ZaloPay, TPBank, Viettel Money, VNPAY, Cake (`lang=vi`, `country=vn`), kéo bằng `google-play-scraper`. Link từng app ở cột `link_nguon` |
+| Xử lý những bước gì | **Kéo:** mỗi app 5.000 mới nhất + 5.000 "liên quan nhất", bỏ trùng theo `reviewId` → 70.294 review · **Lọc:** giữ review khớp từ khoá ngữ cảnh lừa đảo → 566 review · **Ẩn danh:** bỏ tên, ảnh đại diện, `reviewId`; **mỗi review chỉ giữ tối đa 2 câu** (luật dùng dữ liệu mục 5) · **Gán nhãn tay:** `loai` (7 nhóm, định nghĩa ở `evidence/data-mining.md`) + `dung_chu_de` (1 = người viết / người thân đã bị lừa hoặc bị chiếm TK) · Script: `evidence/mine_reviews.py` |
+| Số dòng / số đoạn | **N = 566 review đã đọc và gắn nhãn** (lọc từ 70.294 review đã kéo) · **22/566 (3,9%) `dung_chu_de = 1`**, trong đó 2 dòng đúng lát cắt tin nhắn / link giả danh |
+| Phiên bản / ngày lấy | Ngày xem 27/11/2026 · review có ngày từ 30/08/2023 đến 26/11/2026 · `google-play-scraper` 1.2.7 |
+| Nhãn | **thật** (review công khai, đã ẩn danh) · nhãn do 1 thành viên đọc tay, có AI hỗ trợ rà lại (`docs/ai-usage.md`) |
+| Giới hạn | Review dùng để chấm app nên phần lớn là phàn nàn lỗi / phí → chỉ cho **cận dưới**, không đo được tần suất nhận tin giả · lệch về 1★ · bộ lọc từ khoá bỏ sót review không dùng từ trong danh sách · 1 người gán nhãn, chưa kiểm độ thống nhất · mẫu "liên quan nhất" do Google Play chọn, không ngẫu nhiên · chạy lại ngày khác ra mẫu số hơi khác · **chỉ 2/22 dòng nói đúng kênh tin nhắn/link → cần nguồn thứ hai kiểm lại** |
 
-**Data `synthetic` (nhóm tự sinh):** ghi cách sinh (prompt / script), seed, người kiểm, số dòng đã kiểm tay. Data tự dựng **không phải bằng chứng pain**.
+## Dataset 2 · Câu thử tự dựng (`eval/benchmark.csv`, B01–B15, `source = tu_viet`)
 
-## Dataset 2 · [tên — dữ liệu bản chạy thử đọc qua `codebase/tools.py`]
+| | |
+|---|---|
+| Dùng để làm gì | Bộ câu thử: tin lừa đảo dựng lại (B01–B04, B07, B12–B14), tin ngân hàng hợp lệ dựng mẫu (B05, B06, B08, B11, B15), câu tấn công / từ chối (B09, B10) |
+| Từ đâu | Nhóm viết tay theo kịch bản trong cảnh báo công khai của ngân hàng / VNCERT / công an (brandname giả, khoá tài khoản, điểm thưởng, phạt nguội, xin OTP, link sai 1 ký tự, rút gọn link, APK) và định dạng tin OTP / biến động số dư / thông báo bảo trì công khai. **Không dùng tin nhắn thật của người thật** (luật dùng dữ liệu mục 6) |
+| Xử lý những bước gì | Mọi link là tên miền giả (`.top`, `.cc`, `.info`, `.vip`, sai 1 ký tự) · STK `x...x123`, số dư `x,xxx,xxx`, OTP là số ngẫu nhiên · không có tên người |
+| Số dòng / số đoạn | 15 câu · thuong 7 · kho 6 · tu_choi 2 |
+| Phiên bản / ngày lấy | v1 27/11/2026 |
+| Nhãn | **`synthetic`** · cách sinh: nhóm chọn kịch bản và nhãn, LLM gợi ý biến thể câu chữ (prompt + model ghi ở `docs/ai-usage.md`) · seed: không áp dụng (sinh tương tác, đã chỉnh tay từng câu) · người kiểm: Khánh · đã kiểm tay **15/15** |
+| Giới hạn | Tin dựng "sạch" hơn tin thật (ít teencode, ít lỗi chính tả) · cả bộ chỉ 6 tin hợp lệ (B05, B06, B08, B11, B15, B23) → `false_positive_rate` đổi theo bước ~17% · chưa phủ QR, ảnh chụp, cuộc gọi |
 
-*(Chờ điền: hỏi Thành — công cụ của bản chạy thử đọc data gì, để ở `data/` file nào. Hỏi Vũ — các câu thử `tu_viet` trong `eval/benchmark.csv` dựa trên nguồn nào.)*
+## Dataset 3 · Câu thử từ kịch bản thật (`eval/benchmark.csv`, B16–B23, `source = data_that`)
+
+| | |
+|---|---|
+| Dùng để làm gì | Câu thử bám lừa đảo có thật (8/23 = 35% bộ câu thử, đạt yêu cầu ≥1/3 của R4) |
+| Từ đâu | **B16–B18:** viết lại theo kịch bản người dùng kể trong review ở Dataset 1 — B16: TPBank 1★ 17/01/2025 (giả thu tiền điện nước) · B17: Cake 1★ 05/01/2025 (lừa mở "tk tín dụng ảo" để xoá) · B18: MoMo 5★ 27/09/2026 + Viettel Money 1★ 11/05/2026 (lừa vay tiền hộ) · **B19, B20, B22:** cảnh báo chính thức trên vietcombank.com.vn (tên miền giả `vieetcom.top`, `diem-vietcom-priority.com`; thủ đoạn xin OTP liên kết ví Apple Pay / Google Pay) · **B21:** cảnh báo Cục ATTT / Bộ Công an trên mps.gov.vn (mẫu mạo danh CIC) · **B23:** khuyến cáo chính thức trên vietcombank.com.vn (cú pháp 6167, hotline 1900 54 54 13) · Ngày xem: 27/11/2026 · *Link bài cụ thể của từng câu bổ sung ở CP3* |
+| Xử lý những bước gì | B16–B18 viết lại thành dạng tin nhắn, không chép nguyên văn review · B19–B23 giữ nội dung tin mẫu, link đã làm vô hại / thay tên miền giả, bỏ SĐT · STK dạng `x...x889` |
+| Số dòng / số đoạn | 8 câu · thuong 4 · kho 4 |
+| Phiên bản / ngày lấy | Ngày xem 27/11/2026 |
+| Nhãn | **thật** về kịch bản (review / cảnh báo có thật), câu chữ đã viết lại — ghi rõ ở cột `source` |
+| Giới hạn | Chỉ gồm lừa đảo đã bị phát hiện và cảnh báo → thiếu biến thể mới · B16–B18 là diễn giải của nhóm từ lời kể, có thể lệch tin gốc |
+
+## Dataset 4 · Dữ liệu công cụ của bản chạy thử *(bổ sung ở CP3)*
+
+*Chờ Thành: `codebase/tools.py` đọc dữ liệu gì trong `data/` — dự kiến `data/ten_mien_lua_dao.csv` (tên miền bị báo cáo trên tinnhiemmang.vn, đã làm vô hại `[.]`, ghi ngày xem) và `data/ten_mien_ngan_hang.csv` (tên miền chính thức của ngân hàng). Mỗi file một mục theo bảng trên.*
