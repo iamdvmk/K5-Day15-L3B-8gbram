@@ -10,38 +10,6 @@ from tracing import tool
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
-# Host gốc đã đối chiếu với website của từng đơn vị; không dùng để xác thực người gửi tin.
-OFFICIAL_DOMAINS = {
-    "vietcombank": "vietcombank.com.vn",
-    "techcombank": "techcombank.com",
-    "bidv": "bidv.com.vn",
-    "mbbank": "mbbank.com.vn",
-    "vietinbank": "vietinbank.vn",
-    "acb": "acb.com.vn",
-    "momo": "momo.vn",
-    "tpbank": "tpb.vn",
-    "zalopay": "zalopay.vn",
-    "viettel money": "viettelmoney.vn",
-    "vnpay": "vnpay.vn",
-    "cake": "cake.vn",
-}
-
-BRAND_ALIASES = {
-    "vietcombank": ("vietcombank", "vcb"),
-    "techcombank": ("techcombank",),
-    "bidv": ("bidv",),
-    "mbbank": ("mb bank", "mbbank"),
-    "vietinbank": ("vietinbank",),
-    "acb": ("acb",),
-    "momo": ("momo",),
-    "tpbank": ("tpbank",),
-    "zalopay": ("zalopay",),
-    "viettel money": ("viettel money",),
-    "vnpay": ("vnpay",),
-    "cake": ("cake",),
-}
-
-
 def _plain(text: str) -> str:
     text = unicodedata.normalize("NFD", text.lower())
     return "".join(ch for ch in text if unicodedata.category(ch) != "Mn").replace("đ", "d")
@@ -54,7 +22,7 @@ def _link_and_host(text: str) -> tuple[str, str, bool]:
         raw = url.group(0).rstrip(".,;)")
         parsed = urlsplit(raw)
         return raw, (parsed.hostname or "").lower(), parsed.username is not None
-    bare = re.search(r"(?i)\b[a-z][a-z0-9-]*(?:\.[a-z0-9-]+)*\.(?:com(?:\.vn)?|vn|top|cc|info|vip|net|org|ly|xyz)\b", text)
+    bare = re.search(r"(?i)\b[a-z][a-z0-9-]*(?:\.[a-z0-9-]+)*\.(?:com(?:\.vn)?|vn|top|cc|info|vip|net|org|ly|xyz|online|shop|asia)\b", text)
     return (bare.group(0), bare.group(0).lower(), False) if bare else ("", "", False)
 
 
@@ -72,8 +40,9 @@ def tra_ten_mien(link: str) -> str:
             continue
         with path.open(encoding="utf-8-sig", newline="") as stream:
             for row in csv.DictReader(stream):
-                value = next((row[key] for key in ("ten_mien", "domain", "link") if row.get(key)), "")
-                _, listed_host, listed_userinfo = _link_and_host(value.replace("[.]", "."))
+                value = (row.get("ten_mien") or "").strip().replace("[.]", ".")
+                parsed = urlsplit(value if "://" in value else "https://" + value)
+                listed_host, listed_userinfo = (parsed.hostname or "").lower(), parsed.username is not None
                 listed_host = listed_host.removeprefix("www.")
                 if listed_host and not listed_userinfo and (host == listed_host or host.endswith("." + listed_host)):
                     return status
@@ -99,13 +68,14 @@ def redact_secrets(text: str) -> str:
 
 @tool
 def inspect_message(text: str) -> dict:
-    """Rút dấu hiệu. Input: tin đã che. Output: dấu hiệu và mức rủi ro mock. Không tác động ra ngoài."""
+    """Rút dấu hiệu. Input: tin đã che. Output: dấu hiệu và mức rủi ro quy tắc. Không tác động ra ngoài."""
     plain = _plain(text)
     flags = []
     link, host, has_userinfo = _link_and_host(text)
     has_link = bool(link)
     host = host.removeprefix("www.")
-    official_host = not has_userinfo and any(host == domain or host.endswith("." + domain) for domain in OFFICIAL_DOMAINS.values())
+    domain_status = tra_ten_mien(link) if has_link else "không có trong dữ liệu"
+    official_host = domain_status == "tên miền chính thức"
     action_text = re.sub(r"\bkhong gui link dang nhap\b", "", plain)
     asks_action = bool(re.search(r"\b(?:bam|truy cap|dang nhap|nhap|cung cap|doc giup|tai file|cai dat|chuyen tien|nop tien|doi qua|huy|tra cuu|xac thuc)\b", action_text))
     otp = bool(re.search(r"\botp\b|ma xac thuc|mat khau", plain))
@@ -116,12 +86,8 @@ def inspect_message(text: str) -> dict:
         flags.append("Có link kèm yêu cầu thao tác: " + host)
     if has_userinfo:
         flags.append("URL chứa dấu @; tên miền trước @ không phải địa chỉ đích")
-    if has_link:
-        for brand, domain in OFFICIAL_DOMAINS.items():
-            aliases = BRAND_ALIASES[brand]
-            mentioned = any(re.search(r"\b" + re.escape(alias) + r"\b", plain) for alias in aliases)
-            if mentioned and host != domain and not host.endswith("." + domain):
-                flags.append("Tên miền " + host + " không khớp website chính thức " + domain)
+    if domain_status == "đã bị báo cáo lừa đảo":
+        flags.append("Tên miền đã bị báo cáo lừa đảo: " + host)
     if has_link and host == "bit.ly":
         flags.append("Link rút gọn che địa chỉ đích")
     if requests_secret:
@@ -136,5 +102,5 @@ def inspect_message(text: str) -> dict:
         flags.append("Người dùng đã đưa mật khẩu vào nội dung cần kiểm tra")
     if "[system]" in plain or "bo qua moi huong dan" in plain or "ignore previous" in plain:
         flags.append("Tin nhắn chứa chỉ dẫn nhằm thay đổi cách đánh giá")
-    risk = "Cao" if (has_link and asks_action and not official_host) or requests_secret or (money and urgency) or ("mat khau" in plain and "[da che]" in plain) else "Trung bình" if flags or (has_link and not official_host) else "Thấp"
+    risk = "Cao" if has_userinfo or (domain_status == "đã bị báo cáo lừa đảo") or (has_link and asks_action and not official_host) or requests_secret or (money and urgency) or ("mat khau" in plain and "[da che]" in plain) else "Trung bình" if flags or (has_link and not official_host) else "Thấp"
     return {"risk": risk, "red_flags": flags}
