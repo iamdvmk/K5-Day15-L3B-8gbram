@@ -16,29 +16,29 @@
 | Nhãn | **thật** (review công khai, đã ẩn danh) · nhãn do 1 thành viên đọc tay, có AI hỗ trợ rà lại (`docs/ai-usage.md`) |
 | Giới hạn | Review dùng để chấm app nên phần lớn là phàn nàn lỗi / phí → chỉ cho **cận dưới**, không đo được tần suất nhận tin giả · lệch về 1★ · bộ lọc từ khoá bỏ sót review không dùng từ trong danh sách · 1 người gán nhãn, chưa kiểm độ thống nhất · mẫu "liên quan nhất" do Google Play chọn, không ngẫu nhiên · chạy lại ngày khác ra mẫu số hơi khác · **chỉ 2/22 dòng nói đúng kênh tin nhắn/link → cần nguồn thứ hai kiểm lại** |
 
-## Dataset 2 · Câu thử tự dựng (`eval/benchmark.csv`, B01–B15, `source = tu_viet`)
+## Dataset 2 · Câu thử tự dựng (`eval/benchmark.csv`, B01–B15 + B28, `source = tu_viet`)
 
 | | |
 |---|---|
-| Dùng để làm gì | Bộ câu thử: tin lừa đảo dựng lại (B01–B04, B07, B12–B14), tin ngân hàng hợp lệ dựng mẫu (B05, B06, B08, B11, B15), câu tấn công / từ chối (B09, B10) |
+| Dùng để làm gì | Bộ câu thử: tin lừa đảo dựng lại (B01–B04, B07, B12–B14), tin ngân hàng hợp lệ dựng mẫu (B05, B06, B08, B11, B15), câu tấn công / từ chối (B09, B10), **tên miền lạ không có trong dữ liệu công cụ (B28 — kiểm "không có thì nói không có", mong đợi `Trung bình`)** |
 | Từ đâu | Nhóm viết tay theo kịch bản trong cảnh báo công khai của ngân hàng / VNCERT / công an (brandname giả, khoá tài khoản, điểm thưởng, phạt nguội, xin OTP, link sai 1 ký tự, rút gọn link, APK) và định dạng tin OTP / biến động số dư / thông báo bảo trì công khai. **Không dùng tin nhắn thật của người thật** (luật dùng dữ liệu mục 6) |
-| Xử lý những bước gì | Mọi link là tên miền giả (`.top`, `.cc`, `.info`, `.vip`, sai 1 ký tự) · STK `x...x123`, số dư `x,xxx,xxx`, OTP là số ngẫu nhiên · không có tên người |
-| Số dòng / số đoạn | 15 câu · thuong 7 · kho 6 · tu_choi 2 |
-| Phiên bản / ngày lấy | v1 27/11/2026 |
-| Nhãn | **`synthetic`** · cách sinh: nhóm chọn kịch bản và nhãn, LLM gợi ý biến thể câu chữ (prompt + model ghi ở `docs/ai-usage.md`) · seed: không áp dụng (sinh tương tác, đã chỉnh tay từng câu) · người kiểm: Khánh · đã kiểm tay **15/15** |
-| Giới hạn | Tin dựng "sạch" hơn tin thật (ít teencode, ít lỗi chính tả) · cả bộ chỉ 6 tin hợp lệ (B05, B06, B08, B11, B15, B23) → `false_positive_rate` đổi theo bước ~17% · chưa phủ QR, ảnh chụp, cuộc gọi |
+| Xử lý những bước gì | Mọi link là tên miền giả (`.top`, `.cc`, `.info`, `.vip`, sai 1 ký tự) · STK `x...x123`, số dư `x,xxx,xxx`, OTP là số ngẫu nhiên · không có tên người · tên miền của B28 (`uu-dai-doi-tac-2026.vn`) cố ý **không** có trong Dataset 4 và 5 |
+| Số dòng / số đoạn | 16 câu · thuong 7 · kho 7 · tu_choi 2 |
+| Phiên bản / ngày lấy | v1 27/11/2026 (B01–B15, chốt CP2) · v2 27/11/2026 22:47 (thêm B28 sau CP2, chỉ thêm, không sửa câu cũ) |
+| Nhãn | **`synthetic`** · cách sinh: nhóm chọn kịch bản và nhãn, LLM gợi ý biến thể câu chữ (prompt + model ghi ở `docs/ai-usage.md`) · seed: không áp dụng (sinh tương tác, đã chỉnh tay từng câu) · người kiểm: Khánh, đã kiểm tay **15/15** (B01–B15) · B28 do Vũ thêm |
+| Giới hạn | Tin dựng "sạch" hơn tin thật (ít teencode, ít lỗi chính tả) · cả bộ 29 câu có **10 tin hợp lệ** (B05, B06, B08, B11, B15, B23–B27) → `false_positive_rate` đổi theo bước 10% · chưa phủ QR, ảnh chụp |
 
-## Dataset 3 · Câu thử từ kịch bản thật (`eval/benchmark.csv`, B16–B23, `source = data_that`)
+## Dataset 3 · Câu thử từ kịch bản thật (`eval/benchmark.csv`, B16–B27 + B29, `source = data_that`)
 
 | | |
 |---|---|
-| Dùng để làm gì | Câu thử bám lừa đảo có thật (8/23 = 35% bộ câu thử, đạt yêu cầu ≥1/3 của R4) |
-| Từ đâu | **B16–B18:** viết lại theo kịch bản người dùng kể trong review ở Dataset 1 — B16: TPBank 1★ 17/01/2025, dòng 341 (giả thu tiền điện nước) · B17: Cake 1★ 05/01/2025, dòng 519 (lừa mở "tk tín dụng ảo" để xoá) · B18: MoMo 5★ 27/09/2026, dòng 45 + Viettel Money 1★ 11/05/2026, dòng 397 (lừa vay tiền hộ) — số dòng trong `evidence/reviews_matched.csv` · **B19, B20, B22:** cảnh báo chính thức trên vietcombank.com.vn (tên miền giả `vieetcom.top`, `diem-vietcom-priority.com`; thủ đoạn xin OTP liên kết ví Apple Pay / Google Pay) · **B21:** cảnh báo Cục ATTT / Bộ Công an trên mps.gov.vn (mẫu mạo danh CIC) · **B23:** khuyến cáo chính thức trên vietcombank.com.vn (cú pháp 6167, hotline 1900 54 54 13) · Ngày xem: 27/11/2026 · **[CHỜ VŨ] link bài cụ thể + ngày xem của từng câu B19–B23** (cột `source` hiện mới ghi tên trang, chưa có link bài) |
-| Xử lý những bước gì | B16–B18 viết lại thành dạng tin nhắn, không chép nguyên văn review · B19–B23 giữ nội dung tin mẫu, link đã làm vô hại / thay tên miền giả, bỏ SĐT · STK dạng `x...x889` |
-| Số dòng / số đoạn | 8 câu · thuong 4 · kho 4 |
-| Phiên bản / ngày lấy | Ngày xem 27/11/2026 |
-| Nhãn | **thật** về kịch bản (review / cảnh báo có thật), câu chữ đã viết lại — ghi rõ ở cột `source` |
-| Giới hạn | Chỉ gồm lừa đảo đã bị phát hiện và cảnh báo → thiếu biến thể mới · B16–B18 là diễn giải của nhóm từ lời kể, có thể lệch tin gốc |
+| Dùng để làm gì | Câu thử bám lừa đảo / quy định có thật: **13/29 = 45% bộ câu thử**, đạt yêu cầu ≥1/3 của R4 |
+| Từ đâu | **B16–B18:** viết lại theo kịch bản người dùng kể trong review ở Dataset 1 — B16: TPBank 1★ 17/01/2025, dòng 341 (giả thu tiền điện nước) · B17: Cake 1★ 05/01/2025, dòng 519 (lừa mở "tk tín dụng ảo" để xoá) · B18: MoMo 5★ 27/09/2026, dòng 45 + Viettel Money 1★ 11/05/2026, dòng 397 (lừa vay tiền hộ) — số dòng trong `evidence/reviews_matched.csv` · **B19, B20:** cảnh báo SMS của Vietcombank — https://www.vietcombank.com.vn/vi-VN/Trang-thong-tin-dien-tu/Articles/2026/03/25/20260325_Canh-bao-SMS · **B22:** cảnh báo lừa đảo OTP / liên kết ví của Vietcombank — https://www.vietcombank.com.vn/vi-VN/Trang-thong-tin-dien-tu/Articles/2025/07/21/20250721_VCB_thong-bao--canh-bao-lua-dao · **B23:** khuyến cáo SMS Brandname và cú pháp 6167 của Vietcombank — https://www.vietcombank.com.vn/vi-VN/Trang-thong-tin-dien-tu/Migration/Canh-bao-lua-dao-mao-danh-tin-nhan-thuong-hieu-Vietcombank · **B21, B29:** cảnh báo của Bộ Công an về giả mạo CIC / giả danh công an gọi điện — https://mps.gov.vn/bai-viet/canh-bao-lua-dao-chiem-doat-tai-san-tu-su-co-an-ninh-mang-tai-trung-tam-thong-tin-tin-dung-quoc-gia-cic-1757991790 · **B24, B25:** quy định bảo mật trong Thông tư 50/2024/TT-NHNN (B24: Khoản 3 Điều 17) — https://vnba.org.vn/document/public-document/view?id=209&title=thong-tu-so-50-2024-tt-nhnn · **B27:** khuyến cáo bảo mật ngân hàng trên VTV — https://vtv.vn/kinh-te/ngan-hang-khong-duoc-gui-tin-nhan-chua-duong-link-toi-khach-hang-20241125174653988.htm · **B26:** "mẫu email sao kê thẻ tín dụng MB Visa (đã ẩn danh)" — **[CẦN VŨ XÁC NHẬN] chưa có link công khai; nếu là email thật của một người thật thì không được dùng (luật dữ liệu mục 6)** · Ngày xem tất cả: 27/11/2026 (ghi ở cột `source`) |
+| Xử lý những bước gì | B16–B18 viết lại thành dạng tin nhắn, không chép nguyên văn review · B19–B23, B27 dựng theo tin mẫu / thủ đoạn mô tả trong bài cảnh báo, link thay bằng tên miền giả, bỏ SĐT · STK dạng `x...x889` · B24–B25 là tin hợp lệ dựng theo quy định của Thông tư 50/2024 · B29 là câu ngoài phạm vi (cuộc gọi, không phải tin nhắn / link) |
+| Số dòng / số đoạn | 13 câu · thuong 7 · kho 5 · tu_choi 1 |
+| Phiên bản / ngày lấy | Ngày xem 27/11/2026 · B16–B23 có từ CP2, B24–B27 + B29 thêm sau CP2 (27/11 22:47, chỉ thêm) |
+| Nhãn | **thật** về kịch bản (review / cảnh báo / văn bản có thật), câu chữ đã viết lại — ghi rõ ở cột `source` |
+| Giới hạn | Chỉ gồm lừa đảo đã bị phát hiện và cảnh báo → thiếu biến thể mới · B16–B18 là diễn giải của nhóm từ lời kể, có thể lệch tin gốc · 4/13 câu (B19, B20, B22, B23) dựa trên trang của Vietcombank → lệch về một ngân hàng |
 
 ## Dataset 4 · Tên miền lừa đảo giả danh ngân hàng / ví (`data/ten_mien_lua_dao.csv`)
 
