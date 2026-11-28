@@ -43,6 +43,8 @@ Gõ `dir` (Windows) hoặc `ls` (macOS / Linux): thấy `run.py` và `README.md`
 - macOS: báo `command not found: python` là bình thường → dùng `python3`.
 - `python run.py` cho phép dán tin nhắn văn bản và nhận mức rủi ro, dấu hiệu, lời khuyên. Bản chạy thử không mở link hay thực hiện giao dịch.
 
+- Giao diện demo: `python -m streamlit run app.py` (gọi cùng hàm `answer()` của `codebase/agent.py`, model và guardrail giống `run.py`)
+
 Trong README này lệnh viết là `python …`; máy nhóm cần `python3` hay `py` thì gõ thay.
 
 ## Lệnh

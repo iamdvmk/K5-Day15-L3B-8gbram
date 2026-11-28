@@ -6,3 +6,5 @@
 # Chỉ cần cho evidence/mine_reviews.py (đào review Google Play) — bản chạy thử không dùng
 google-play-scraper==1.2.7
 pandas==3.1.1
+streamlit
+python-dotenv

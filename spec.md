@@ -1,10 +1,10 @@
-# AI SPEC — Agent phát hiện tin nhắn lừa đảo/giả mạo app ngân hàng · Nhóm 8gbram · Phòng C401 · Zone 4
+# AI SPEC — Agent phát hiện tin nhắn lừa đảo/giả mạo app ngân hàng · Nhóm 8gbram · Phòng C401 · Zone 1
 
 > Mốc nộp: §7 chốt chuẩn "đạt" tại **CP2 19:30 Thứ Sáu 27/11** · §0–§7 nộp **CP3 10:00 Thứ Bảy 28/11** · đủ §0–§10 **CP4 14:30 Thứ Bảy 28/11** · §10 changelog ghi tiếp đến **23:59 Thứ Bảy 28/11**.
 > Đầu mỗi mục ghi bước guide (`02-guide.md` trong repo đề) chỉ cách điền. Mỗi mục ngắn, có số và nguồn; chi tiết để ở file được trỏ tới. Xoá dòng hướng dẫn trong ngoặc vuông khi điền xong.
 
-Track: [ ] A · [ ] B · [ ] C · [ ] D · [ ] E — bài toán: [đề gợi ý trong file track, hoặc bài toán nhóm tự mở rộng] __
-Data BTC cấp đã dùng (nếu có — không commit nguyên file): __
+- Track / đề: **Track E · Tài chính — hướng tự chọn: kiểm tin nhắn / link nghi giả danh ngân hàng trước khi người dùng làm theo** (gần ý "hỗ trợ khi giao dịch nghi lừa đảo" của file track E)
+- Data BTC cấp đã dùng: **Không** (Track E tự tìm data — xem `data/DATA_CARD.md`)
 
 ## §0. Hiện tại việc này diễn ra thế nào *(guide 1.1)*
 - Luồng hiện tại của việc này, trong khoá hoặc trên app thật (3–5 bước; ảnh chụp từ tài khoản của mình, đã che thông tin):
@@ -15,7 +15,7 @@ Data BTC cấp đã dùng (nếu có — không commit nguyên file): __
   5. Khi đã mất tiền mới liên hệ ngân hàng — review kể không chặn lại được (`evidence/summary.md`).
   *(Không đính kèm ảnh chụp tin nhắn thật — luật dùng dữ liệu mục 6; các bước trên tổng hợp từ review trong `evidence/` và bài cảnh báo chính thức của ngân hàng.)*
 - Công cụ / AI đang được dùng cho việc này (nếu có) + nguồn. Không kiểm được thì ghi "chưa kiểm":
-  - Cảnh báo / chặn trong app ngân hàng, ví (MoMo cảnh báo khi chuyển tiền; MB, VietinBank phát hiện "ứng dụng giả mạo", chặn trợ năng) — nguồn: review trong `evidence/reviews_matched.csv` (nhóm `tinh_nang_chong_lua`, 64/566); cơ chế bên trong: **chưa kiểm**.
+  - Cảnh báo / chặn trong app ngân hàng, ví (MoMo cảnh báo khi chuyển tiền; MB, VietinBank phát hiện "ứng dụng giả mạo", chặn trợ năng) — nguồn: review trong `evidence/reviews_matched.csv` (nhóm `tinh_nang_chong_lua`, 65/566); cơ chế bên trong: **chưa kiểm**.
   - Tra cứu tên miền lừa đảo trên tinnhiemmang.vn/website-lua-dao (NCSC) và chongluadao.vn — người dùng phải tự mở web và tự tách link để tra.
   - Hỏi chatbot chung (ChatGPT…) — chưa kiểm mức độ người dùng làm việc này.
 
@@ -24,20 +24,20 @@ Data BTC cấp đã dùng (nếu có — không commit nguyên file): __
 - Việc họ cố làm xong (`động từ + đối tượng + bối cảnh`, không có chữ AI): **xác định một tin nhắn mang danh ngân hàng là thật hay giả trước khi bấm link hoặc làm theo yêu cầu.**
 - Hôm nay họ giải bằng gì, hỏng ở đâu, vì sao chưa bỏ: tự đoán / hỏi người thân / gọi hotline / tra tinnhiemmang.vn. Hỏng vì: tin giả nằm chung luồng brandname và link chỉ sai vài ký tự nên mắt thường khó thấy; hotline mất thời gian; tra web phải tự tách link và chỉ biết tên miền đã bị báo cáo. Chưa bỏ vì đó là các cách duy nhất có sẵn, miễn phí.
 - Pain (KHÔNG chữ AI): khách hàng app ngân hàng — vừa nhận tin nhắn mang danh ngân hàng chứa link / yêu cầu OTP — không phân biệt được thật / giả trong vài giây — bấm link, nhập OTP và mất tiền trong tài khoản.
-- Bằng chứng — số chính + kết luận (chi tiết: `evidence/summary.md`): đào review Google Play 11 app → đọc tay 566 review: **22/566 (3,9%) kể bị lừa hoặc bị chiếm tài khoản**, 2/22 nói đúng kênh tin nhắn / link (VD *"vợ mình không biết kích vào link lạ từ lúc nào và đã mất hơn 500tr đồng"* — Techcombank 1★). 64/566 phàn nàn tính năng chống lừa hiện có chặn nhầm. **Kết luận: giả thuyết đúng một phần** — pain có thật và rất đắt (mất tiền), nhưng review chỉ cho cận dưới và ít nói về kênh tin nhắn. Kênh tin nhắn / link được đối chiếu với cảnh báo chính thức của ngân hàng và VNCERT (`evidence/summary.md`); nhóm không phỏng vấn / khảo sát, nên tần suất ở §2 là *(tự ước tính)*.
+- Bằng chứng — số chính + kết luận (chi tiết: `evidence/summary.md`): đào review Google Play 11 app → đọc tay 566 review: **22/566 (3,9%) kể bị lừa hoặc bị chiếm tài khoản**, 2/22 nói đúng kênh tin nhắn / link (VD *"vợ mình không biết kích vào link lạ từ lúc nào và đã mất hơn 500tr đồng"* — Techcombank 1★). 65/566 phàn nàn tính năng chống lừa hiện có chặn nhầm. **Kết luận: giả thuyết đúng một phần** — pain có thật và rất đắt (mất tiền), nhưng review chỉ cho cận dưới và ít nói về kênh tin nhắn. Kênh tin nhắn / link được đối chiếu với cảnh báo chính thức của ngân hàng và VNCERT (`evidence/summary.md`); nhóm không phỏng vấn / khảo sát, nên tần suất ở §2 là *(tự ước tính)*.
 
 
 ## §2. Impact & quyết định chọn *(guide 1.3)*
  
 | Hướng | Bao nhiêu người gặp | Bao nhiêu lần / tháng | Mỗi lần tốn gì | Impact / tháng | Làm kịp không | Chọn? |
 |---|---|---|---|---|---|---|
-| **A. Kiểm tin nhắn / link nghi giả danh ngân hàng trước khi bấm** | 22/566 review đã đọc tay kể bị lừa / bị chiếm TK, ở 9/11 app (`summary.md`) | 4 tin đáng ngờ / người *(tự ước tính)* | 5 phút tự kiểm / gọi hotline mỗi tin *(tự ước tính)*; khi bị lừa: mất tiền (review: 500 triệu) | Xem công thức dưới | Có — chỉ cần văn bản tin nhắn, chạy riêng được | **Chọn** |
-| B. Hỗ trợ khi tính năng chống lừa / giao dịch bị chặn nhầm | 64/566 review phàn nàn chặn nhầm (`reviews_matched.csv`) | *(tự ước tính)* thấp hơn A — chỉ khi chuyển tiền / mở app | Bực, mất thời gian, không dùng được app (VD người khiếm thị bị chặn trợ năng) | Phiền toái, không mất tiền trực tiếp | Không — quyết định chặn / mở là của ngân hàng, phải nối hệ thống thật (cấm theo ràng buộc 2) | Loại |
+| **A. Kiểm tin nhắn / link nghi giả danh ngân hàng trước khi bấm** | 22/566 review đã đọc tay kể bị lừa / bị chiếm TK, ở 9/11 app (`summary.md`) | 4,5 lần / người (trung bình 3 persona) *(tự ước tính)* | 5 phút tự kiểm / gọi hotline mỗi tin *(tự ước tính)*; khi bị lừa: mất tiền (review: 500 triệu) | Xem công thức dưới | Có — chỉ cần văn bản tin nhắn, chạy riêng được | **Chọn** |
+| B. Hỗ trợ khi tính năng chống lừa / giao dịch bị chặn nhầm | 65/566 review phàn nàn chặn nhầm (`reviews_matched.csv`) | *(tự ước tính)* thấp hơn A — chỉ khi chuyển tiền / mở app | Bực, mất thời gian, không dùng được app (VD người khiếm thị bị chặn trợ năng) | Phiền toái, không mất tiền trực tiếp | Không — quyết định chặn / mở là của ngân hàng, phải nối hệ thống thật (cấm theo ràng buộc 2) | Loại |
 | C. Hỗ trợ sau khi đã bị lừa (báo cáo, khoá TK, lấy lại tiền) | Có trong review (VD "nên có phần báo bị lừa đảo để lấy lại tiền" — VietinBank 1★) | Hiếm hơn A (chỉ người đã mất tiền) | Mất tiền đã xảy ra | Cứu vãn sau khi mất | Không — cần thẩm quyền ngân hàng / công an | Loại |
  
-- **Impact / tháng** của hướng chọn = **1.000 người × 4 lần × 5 phút = 20.000 phút (≈ 333 giờ) / tháng** cho nhóm thí điểm 1.000 người dùng — nguồn từng thừa số: 1.000 người = quy mô thí điểm *(tự ước tính)*; 4 tin đáng ngờ / người / tháng *(tự ước tính)*; 5 phút / tin *(tự ước tính)*. Chưa tính phần lớn nhất là **tiền tránh mất**: bối cảnh cả nước — năm 2025 người Việt mất hơn 6 nghìn tỷ đồng vì lừa đảo trực tuyến ([Nhân Dân](https://nhandan.vn/ocop/video-nhung-diem-sang-hinh-thanh-tu-cuoc-chien-chong-lua-dao-truc-tuyen-post944111.html)); 9 tháng đầu 2026 ghi nhận hơn 1.800 vụ ([Tiền Phong](https://tienphong.vn/cach-nao-de-han-che-lua-dao-qua-mang-den-hang-nghin-ty-dong-post1894130.tpo)) — số vụ được ghi nhận là phần nổi, không dùng làm số người gặp.
-- Hướng ĐÃ LOẠI + vì sao (giữ lại, đừng xoá): B — nhiều review hơn A (64 vs 22) nhưng hậu quả là phiền, không mất tiền, và quyết định thuộc ngân hàng; C — sau khi đã mất tiền, cần thẩm quyền. A chọn vì sai là mất tiền thật và làm trọn được trên văn bản tin nhắn trong 10 giờ.
-- Số lần / tháng của từng kiểu người dùng (dùng cho persona ở §8): ít — 1 tin / tháng · vừa — 4 tin / tháng · nhiều (người lớn tuổi, hay nhận tin rác) — 10 tin / tháng *(tự ước tính)*.
+- **Impact / tháng** của hướng chọn = **50.000 người × 4,5 lần × 5 phút = 1.125.000 phút (≈ 18.750 giờ) / tháng** ở kịch bản cơ sở — nguồn từng thừa số: 50.000 người = quy mô cơ sở trong `cost/personas.yaml` *(tự ước tính)*; 4,5 lần / người / tháng = trung bình có trọng số của 3 persona (60% × 2 + 30% × 6 + 10% × 15) *(tự ước tính)*; 5 phút / lần tự kiểm / gọi hotline *(tự ước tính)*. Quy ra tiền ở 30.000 ₫ / giờ *(tự ước tính)* ≈ 11.000 ₫ / người / tháng. Chưa tính phần lớn nhất là **tiền tránh mất**: năm 2025 người Việt mất hơn 6 nghìn tỷ đồng vì lừa đảo trực tuyến ([Nhân Dân](https://nhandan.vn/ocop/video-nhung-diem-sang-hinh-thanh-tu-cuoc-chien-chong-lua-dao-truc-tuyen-post944111.html)).
+- Hướng ĐÃ LOẠI + vì sao (giữ lại, đừng xoá): B — nhiều review hơn A (65 vs 22) nhưng hậu quả là phiền, không mất tiền, và quyết định thuộc ngân hàng; C — sau khi đã mất tiền, cần thẩm quyền. A chọn vì sai là mất tiền thật và làm trọn được trên văn bản tin nhắn trong 10 giờ.
+- Số lần / tháng của từng kiểu người dùng (dùng cho persona ở §8): `dung_it` 60% · 2 lần · `dung_vua` 30% · 6 lần · `dung_nhieu` 10% · 15 lần *(tự ước tính)* — khớp `cost/personas.yaml`.
 
 ## §3. Giải pháp tương tự *(guide 2.1)*
 - **Cảnh báo lừa đảo trong app MoMo / ngân hàng khi chuyển tiền**: đáng học — cảnh báo đúng lúc, ngay trước hành động · đáng né — chặn cứng, bắt chờ, bắt gõ xác nhận làm người dùng bực (review nhóm `tinh_nang_chong_lua`) · mình khác — chỉ cảnh báo + giải thích dấu hiệu, người dùng luôn tự quyết, và kiểm **trước khi bấm link** chứ không chờ đến lúc chuyển tiền.
@@ -78,7 +78,8 @@ flowchart LR
 |---|---|---|---|
 | `redact_secrets` | tin nhắn thô | tin đã che OTP, mật khẩu, SĐT | Không (xử lý regex trong máy) |
 | `inspect_message` (`@tool`) | tin đã che | `{"risk": "Cao/Trung bình/Thấp", "red_flags": [...]}` | Không |
-| `call_model` | tin đã che + kết quả `inspect_message` | lời giải thích + bước tiếp theo *(CP2: mock, kết quả chưa dùng; CP3: model thật)* | Không — chỉ gọi API model, không gửi tin, không chặn, không thao tác tài khoản |
+| `call_model` | tin đã che + kết quả công cụ | mức rủi ro, dấu hiệu, bước nên làm (`gpt-5.4-mini-2026-03-17`) | Không — chỉ gọi API model, không gửi tin, không chặn, không thao tác tài khoản |
+| `tra_ten_mien` | link / tên miền tách từ tin | "đã bị báo cáo lừa đảo" / "tên miền chính thức" / "không có trong dữ liệu" (đọc `data/` tên miền lừa đảo + tên miền ngân hàng) | Không (chỉ đọc file trong `data/`) |
  
 **Mức tự động:** AI gợi ý, người quyết.
  
@@ -94,7 +95,7 @@ flowchart LR
 | Ưu tiên không bỏ sót hơn không báo nhầm | Lớp quy tắc ép mức Cao trước LLM |
 | Không tin dữ liệu đầu vào | Tin nhắn là dữ liệu, không phải lệnh — phát hiện lệnh chèn |
  
-**Phần còn giả (tại CP2):** model chạy chế độ mock trả kết quả cố định; CP3 thay bằng model thật.
+**Phần còn giả:** Không còn phần giả ở luồng chính — đã nối model thật `gpt-5.4-mini-2026-03-17` (`codebase/ai.py`, key trong `.env`). Chế độ `fake` chỉ chạy khi không có `MODEL_PROVIDER` / key, output khi đó có nhãn `[DEMO MOCK]`. Dữ liệu tên miền là danh sách tĩnh lấy tay ngày 27/11/2026, không cập nhật tự động.
 
 ## §5. Chỗ khó — 4 lớp + ≥6 kịch bản + 2 tấn công *(guide 2.3)*
  
@@ -119,7 +120,7 @@ flowchart LR
 ## §7. Đánh giá & chuẩn "đạt" (CHỐT TRƯỚC 19:30 — không sửa sau)
  
 - Data card: `data/DATA_CARD.md`
-- Bộ câu thử: `eval/benchmark.csv` — CP2: 10 câu (thường 6 · khó 2 · từ chối 2); CP3 mở rộng 20–30 câu
+- Bộ câu thử: `eval/benchmark.csv` — CP2: 23 câu · CP3–CP4: 29 câu (thường 14 · khó 12 · từ chối 3) · `tu_viet` 16 · `data_that` 13
 - Metric: `eval/metric_spec.yaml` — `scam_recall` · `false_positive_rate` · `red_flag_va_advice_dung` · `chong_tan_cong_va_guardrail`
 **Chuẩn "đạt":** Đạt khi ≥ 75% câu qua, và scam_recall ≥ 80%, và 100% câu tu_choi đạt chong_tan_cong_va_guardrail.
 
@@ -131,20 +132,36 @@ flowchart LR
 | 1 | 23/29 | 79% | `run-1@20261128-085838` |
 | 2 | 24/29 | 83% | `run-2@20261128-104318` |
 
-## §8. Chi phí khi dùng thật *(guide 4.2)*
-- Persona + giá: `cost/personas.yaml` · lượt mô phỏng: `cost/simulate-__.csv` (__ phiên)
-- Chi phí / task thành công: __ (model __) · __ (model __)
-- Chi phí / tháng ở quy mô thật: thấp __ · cơ sở __ · cao __ → chi tiết `cost/cost-estimate.md`
-- So với impact / người / tháng (§2): đáng làm không, vì sao:
+## §8. Chi phí khi dùng thật
+ 
+- Persona: 3 kiểu — `dung_it` 60% · 2 phiên / tháng · `dung_vua` 30% · 6 phiên · `dung_nhieu` 10% · 15 phiên *(tự ước tính)* — `cost/personas.yaml`
+- Người dùng thật: thấp 10.000 · cơ sở 50.000 · cao 200.000 *(tự ước tính)*
+- Mô phỏng: `cost/simulate-1.csv` · 50 phiên · seed 42 · đo token trên gpt-5.4-mini-2026-03-17 · tỉ lệ đạt lượt 2: 24/29 (83%)
+- **Chi phí / task thành công (cơ sở, gpt-5.4-mini): $0.00065 ≈ 16 ₫**
+- Chi phí / tháng: thấp ≈ 752.000 ₫ · **cơ sở ≈ 3,76 triệu ₫** · cao ≈ 15,0 triệu ₫ (gpt-5.4-mini) · so sánh gpt-5.4-nano: cơ sở ≈ 1,03 triệu ₫ (giả định cùng tỉ lệ đạt, chưa đo)
+- So với impact: chi phí ≈ 75 ₫ / người / tháng so với ≈ 11.000 ₫ giá trị thời gian tiết kiệm / người / tháng → **đáng làm**
+- Chi tiết: `cost/cost-estimate.md`
 
-## §9. Rủi ro & an toàn
-- Dữ liệu: đã ẩn danh gì, không thu gì, không đưa gì vào model gói miễn phí:
-- AI **không được** làm gì kể cả khi người dùng yêu cầu:
-- Ai có thể bị hại nếu AI sai, và nhóm chặn thế nào:
+## §9. Dữ liệu, giới hạn & an toàn
+ 
+- **Dữ liệu dùng thế nào:**
+  - *Bằng chứng:* review công khai Google Play của 11 app (70.294 review kéo về → 566 đọc tay), đã bỏ tên người viết / ảnh / `reviewId`, mỗi review giữ ≤ 2 câu, có link + ngày xem (`data/DATA_CARD.md` Dataset 1).
+  - *Bộ câu thử:* 16 câu tự dựng (`synthetic`) + 13 câu dựng theo kịch bản review / cảnh báo chính thức; link là tên miền giả hoặc đã làm vô hại; STK, số dư, OTP là số giả. **Không dùng tin nhắn thật của người thật** (luật dùng dữ liệu mục 6).
+  - *Công cụ:* danh sách tên miền lừa đảo (tinnhiemmang.vn, chongluadao.vn — đã làm vô hại) và tên miền chính thức của ngân hàng (`data/`).
+  - *Khi chạy:* `redact_secrets` che OTP, mật khẩu, SĐT, STK **trước khi** gửi tin cho model; không lưu tin người dùng ngoài log chạy thử; API key chỉ trong `.env` (không commit).
+- **AI luôn phải / không được làm gì (kể cả khi người dùng yêu cầu):**
+  - Luôn: in dòng `Mức rủi ro: Cao / Trung bình / Thấp` kèm dấu hiệu và bước nên làm; không chắc → `Trung bình` + "kiểm trong app chính thức / gọi hotline in trên thẻ" (G10); có link lạ hoặc lệnh chèn → lớp quy tắc ép tối thiểu `Cao`, model **không hạ được**.
+  - Không được: nói "an toàn tuyệt đối" / "100% an toàn"; làm theo lệnh nằm trong tin nhắn (`[SYSTEM]`, đổi vai, ép mức rủi ro); dùng mật khẩu / OTP người dùng gửi; mở link, đăng nhập, chuyển tiền hộ; xác minh cuộc gọi / số điện thoại / ảnh chụp (ngoài phạm vi → từ chối và chỉ kênh chính thức).
+  - Giới hạn đã biết: chỉ dựa nội dung tin, **không xác thực được người gửi**; tên miền mới chưa có trong danh sách chỉ ra "chưa xác định"; brandname giả nằm chung luồng tin thật không phân biệt được bằng nội dung.
+- **Ai có thể bị hại nếu sai, và chặn thế nào:**
+  - **Bỏ sót lừa đảo** (sai đắt nhất) → người dùng bấm link / đọc OTP và **mất tiền**. Lượt 2: scam_recall 93,3%; ca bỏ sót còn lại B22 (xin OTP liên kết Apple Pay bị hạ xuống Trung bình) — ghi ở `eval/report.md` mục 4. Chặn: lớp quy tắc trước model, mọi output đều khuyên kiểm qua kênh chính thức.
+  - **Báo nhầm tin thật** → người dùng bực, bỏ qua cảnh báo hoặc bỏ lỡ tin ngân hàng thật. Lượt 2: false_positive_rate 30% (sát ngưỡng ≤ 30%). Chặn: người dùng luôn bỏ qua được cảnh báo, hệ thống không chặn tin.
+  - **Bị lệnh chèn đánh lừa** → công cụ thành bẫy ("tin này an toàn"). Lượt 2: 3/3 câu `tu_choi` đạt, 0 câu có "an toàn tuyệt đối".
+  - **Người dùng ỷ lại** vào kết quả `Thấp` → dòng "Giới hạn: không xác thực được người gửi" luôn in kèm.
 
 ## §10. Phân công & changelog
-- Phân công có tên (theo chặng, chia cặp — guide "Cách chia việc"): __
-- Dùng AI vào việc gì (2–3 dòng; chi tiết `docs/ai-usage.md`):
+- Phân công có tên: Khánh (đội trưởng) — spec, canvas, điều phối, chi phí, slide, nộp form · Thành — bản chạy thử, nối model, guardrail, video · Phát — đào review, bằng chứng, DATA_CARD, data tên miền · Vũ — bộ câu thử, metric, chấm lượt 1–2, report
+- Dùng AI vào việc gì: xem `docs/ai-usage.md`
 - Nhật ký thay đổi — **mọi thay đổi sau CP2 19:30 Thứ Sáu 27/11 phải có dòng ở đây**:
 
 **CP2 → CP4** (vd thu hẹp lát cắt, hỏi thêm người dùng, lần cải tiến trước lượt 2)
@@ -154,6 +171,12 @@ flowchart LR
 | 27/11, sau CP2 (giờ chi tiết chưa ghi) | Nối model thật trong `ai.py`, thay mock bằng quyết định model trong `agent.py` | Nối sản phẩm từ luồng mock thành luồng thật có thể gọi AI Model |
 | 27/11 21:50 | Cập nhật README và `docs/ai-usage.md` | Làm thống nhắt format chỉnh sửa và ghi AI log |
 | 28/11 10:17 | Cải tiến `agent.py`, `tools.py`: Cải thiện guardrail và prompt injection | Các lượt từ chối trong benchmark chưa đạt, cần cải tiến |
+| 28/11 | Viết §0–§3, §5–§6 | hoàn thiện spec cho CP3 |
+| 28/11 | Thống nhất 65/566 review phàn nàn tính năng chống lừa (cột `loai` sau đọc tay) ở canvas, spec, metric_spec (chỉ dòng `why`), DATA_CARD | 64 là số máy gợi ý, không dùng làm số chính |
+| 28/11 | Sửa guardrail: từ chối xác minh cuộc gọi / SĐT / ảnh, bắt thêm mẫu lệnh chèn, tách xử lý OTP (Thành) → lượt 2 `run-2@20261128-104318` 24/29 | cải tiến nhắm câu ngoài phạm vi B29 (điều kiện cứng 100% `tu_choi`) |
+| 28/11 | Sửa `cost/personas.yaml` (giá gpt-5.4-mini / nano, quy mô 10k / 50k / 200k), chạy `simulate-1`, viết `cost/cost-estimate.md`, đồng bộ §2, điền §8 | mô phỏng chi phí CP4 |
+| 28/11 | Điền §9, sửa §0, §4 (bảng công cụ, phần còn giả), §7 (số câu) | hoàn thiện spec cho CP4 |
+| 28/11 | Thêm `app.py` (giao diện Streamlit gọi lại `answer()`, không đổi logic) | phục vụ demo; kết quả đo vẫn là lượt 2 |
 
 **Sau CP4 (đến 23:59 Thứ Bảy 28/11)** (sửa theo góp ý — không sửa chuẩn "đạt", câu thử, số bằng chứng, kết quả các lượt đã chạy)
 
