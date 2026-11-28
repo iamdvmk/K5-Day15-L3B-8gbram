@@ -43,6 +43,8 @@ Gõ `dir` (Windows) hoặc `ls` (macOS / Linux): thấy `run.py` và `README.md`
 - macOS: báo `command not found: python` là bình thường → dùng `python3`.
 - `python run.py` cho phép dán tin nhắn văn bản và nhận mức rủi ro, dấu hiệu, lời khuyên. Bản chạy thử không mở link hay thực hiện giao dịch.
 
+- Giao diện demo: `python -m streamlit run app.py` (gọi cùng hàm `answer()` của `codebase/agent.py`, model và guardrail giống `run.py`)
+
 Trong README này lệnh viết là `python …`; máy nhóm cần `python3` hay `py` thì gõ thay.
 
 ## Lệnh
@@ -119,5 +121,5 @@ ____
 | 4 | Bản chạy thử làm trọn lát cắt | `codebase/` · lệnh ở mục "Lệnh" |
 | 5 | Định nghĩa "tốt" + bộ câu thử | `data/DATA_CARD.md` · `eval/` |
 | 6 | Mô phỏng chi phí khi dùng thật | `cost/` |
-| 7 | Slide + demo + video dự phòng | slide trong repo (PDF, PPTX, HTML…) hoặc link slide ở form CP4 · link video: ____ |
+| 7 | Slide + demo + video dự phòng | slide trong repo (PDF, PPTX, HTML…) hoặc link slide ở form CP4 · link video: https://drive.google.com/file/d/123Ot9i5RtedxAsP4sHz8Dk_D33SZsh5r/view?usp=sharing |
 | + | *Bonus:* người dùng thử | `validation/log.md` |

@@ -17,6 +17,7 @@ def _plain(text: str) -> str:
 
 def _link_and_host(text: str) -> tuple[str, str, bool]:
     """Lấy host thực của URL; phần trước @ không được tính là host chính thức."""
+    text = text.translate(str.maketrans({"．": ".", "。": ".", "｡": "."}))
     url = re.search(r"(?i)https?://[^\s]+", text)
     if url:
         raw = url.group(0).rstrip(".,;)")
@@ -29,7 +30,7 @@ def _link_and_host(text: str) -> tuple[str, str, bool]:
 @tool
 def tra_ten_mien(link: str) -> str:
     """Tra tên miền. Input: link/host. Output: trạng thái trong hai CSV. Không tác động ra ngoài."""
-    _, host, has_userinfo = _link_and_host(link)
+    _, host, has_userinfo = _link_and_host(link.replace("[.]", "."))
     host = host.removeprefix("www.")
     if not host or has_userinfo:
         return "không có trong dữ liệu"
@@ -51,12 +52,12 @@ def tra_ten_mien(link: str) -> str:
 
 def redact_secrets(text: str) -> str:
     """Che OTP, mật khẩu, SĐT và STK có nhãn trước khi ghi trace hoặc gọi model."""
-    text = re.sub(r"(?i)(\b(?:otp|ma xac thuc|mã xác thực)\b[^\d\n]{0,60}?)\b\d{4,8}\b", r"\1[ĐÃ CHE]", text)
+    text = re.sub(r"(?i)(\b(?:otp|ma xac thuc|mã xác thực)\b[^\d\n]{0,60}?)\b\d(?:[ .-]?\d){3,7}\b", r"\1[ĐÃ CHE]", text)
     text = re.sub(r"(?i)(\b(?:mat khau|mật khẩu|password)\b\s*(?:la|là|:)?\s*)\S+", r"\1[ĐÃ CHE]", text)
     # STK không có một độ dài chung cho mọi ngân hàng: chỉ che chuỗi 6–19 chữ số
     # khi có nhãn tài khoản ngay trước nó; giữ nguyên tiền, ngày và hotline.
     text = re.sub(
-        r"(?i)(\b(?:stk|số tài khoản|so tai khoan|tài khoản số|tai khoan so|tk)\b\s*(?::|là|la|số|so)?\s*)(\d(?:[ .-]?\d){5,18})(?!\w)",
+        r"(?i)(\b(?:stk|số tài khoản|so tai khoan|tài khoản số|tai khoan so|tk)\b\s*(?:[a-z]{2,25}\s*)?(?::|là|la|số|so)?\s*)(\d(?:[ .-]?\d){5,18})(?!\w)",
         r"\1[ĐÃ CHE STK]", text,
     )
     text = re.sub(
@@ -66,12 +67,11 @@ def redact_secrets(text: str) -> str:
     return re.sub(r"(?<!\w)(?:\+84|0)[ .-]?[35789](?:[ .-]?\d){8}(?!\w)", "[ĐÃ CHE SĐT]", text)
 
 
-@tool
-def inspect_message(text: str) -> dict:
-    """Rút dấu hiệu. Input: tin đã che. Output: dấu hiệu và mức rủi ro quy tắc. Không tác động ra ngoài."""
+def _inspect_single(text: str) -> dict:
+    """Rút dấu hiệu cho một URL; không ghi thêm sự kiện tool vào trace."""
     plain = _plain(text)
     flags = []
-    link, host, has_userinfo = _link_and_host(text)
+    link, host, has_userinfo = _link_and_host(text.replace("[.]", "."))
     has_link = bool(link)
     host = host.removeprefix("www.")
     domain_status = tra_ten_mien(link) if has_link else "không có trong dữ liệu"
@@ -104,3 +104,26 @@ def inspect_message(text: str) -> dict:
         flags.append("Tin nhắn chứa chỉ dẫn nhằm thay đổi cách đánh giá")
     risk = "Cao" if has_userinfo or (domain_status == "đã bị báo cáo lừa đảo") or (has_link and asks_action and not official_host) or requests_secret or (money and urgency) or ("mat khau" in plain and "[da che]" in plain) else "Trung bình" if flags or (has_link and not official_host) else "Thấp"
     return {"risk": risk, "red_flags": flags}
+
+
+@tool
+def inspect_message(text: str) -> dict:
+    """Rút dấu hiệu. Input: tin đã che. Output: mức rủi ro quy tắc và dấu hiệu. Không tác động ra ngoài."""
+    normalized = text.replace("[.]", ".")
+    urls = re.findall(r"(?i)https?://[^\s]+", normalized)
+    if len(urls) <= 1:
+        return _inspect_single(normalized)
+
+    context = normalized
+    for url in urls:
+        context = context.replace(url, "", 1)
+    findings = {"risk": "Thấp", "red_flags": []}
+    for url in urls:
+        candidate = _inspect_single(context + " " + url)
+        if candidate["risk"] == "Cao":
+            findings["risk"] = "Cao"
+        elif candidate["risk"] == "Trung bình" and findings["risk"] != "Cao":
+            findings["risk"] = "Trung bình"
+        findings["red_flags"].extend(candidate["red_flags"])
+    findings["red_flags"] = list(dict.fromkeys(findings["red_flags"]))
+    return findings
