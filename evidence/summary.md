@@ -53,6 +53,6 @@ Mã dòng = số dòng trong `evidence/reviews_matched.csv`. Mỗi trích dẫn 
 - Khi bị lừa thì **thiệt hại lớn và gần như không lấy lại được** → bỏ sót một tin lừa đắt hơn nhiều so với báo nhầm (khớp lựa chọn ở canvas dòng 6: ưu tiên không bỏ sót).
 - **Cảnh báo chống lừa hiện có của app bị phàn nàn nhiều hơn chính chuyện bị lừa** (65 so với 22 review, 55/65 chấm 1–2★): chặn nhầm, bắt tắt trợ năng, không vào được app lúc cần → cảnh báo của nhóm phải **giải thích dấu hiệu cụ thể và để người dùng tự quyết**, không chặn thao tác.
 
-Điều vẫn chưa biết: bao nhiêu khách hàng nhận tin / link giả danh ngân hàng mỗi tháng · họ tự kiểm bằng cách nào và mất bao lâu · bao nhiêu người từng (suýt) làm theo → hỏi ở phỏng vấn P1–P3.
+Điều vẫn chưa biết: bao nhiêu khách hàng nhận tin / link giả danh ngân hàng mỗi tháng · họ tự kiểm bằng cách nào và mất bao lâu · bao nhiêu người từng (suýt) làm theo.
 
 Người viết review thường là người đang bực (lệch 1★) · bộ lọc từ khoá bỏ sót review không dùng từ trong danh sách · nhãn do 1 người gán · không có phỏng vấn / khảo sát kiểm lại tần suất.
