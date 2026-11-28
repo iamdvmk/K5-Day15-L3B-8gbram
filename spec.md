@@ -170,6 +170,9 @@ flowchart LR
 |---|---|---|
 | 27/11, sau CP2 (giờ chi tiết chưa ghi) | Nối model thật trong `ai.py`, thay mock bằng quyết định model trong `agent.py` | Nối sản phẩm từ luồng mock thành luồng thật có thể gọi AI Model |
 | 27/11 21:50 | Cập nhật README và `docs/ai-usage.md` | Làm thống nhắt format chỉnh sửa và ghi AI log |
+| 27/11 22:01 | `evidence/mine_reviews.py` v3: cắt mỗi review còn ≤ 2 câu (ưu tiên câu chứa từ khoá, phần bỏ ghi `[…]`), thêm cột `link_nguon`, `ngay_xem`, không ghi đè file đã gán nhãn; cắt lại 117 dòng trong `reviews_matched.csv` (nhãn giữ nguyên, gán trên nguyên văn); viết `evidence/summary.md` (7 trích dẫn có link) (Phát) | luật dữ liệu mục 5 (trích ≤ 2 câu, có nguồn); bằng chứng pain cần ≥ 5 trích dẫn nguyên văn |
+| 27/11 22:22 | Thêm `data/ten_mien_lua_dao.csv` (27 tên miền giả danh 6 ngân hàng / ví đã đào review, nguồn tinnhiemmang.vn) và `data/ten_mien_ngan_hang.csv` (11 tên miền chính thức) (Phát) | dữ liệu cho công cụ `tra_ten_mien` trong `codebase/tools.py` |
+| 27/11 22:25 – 28/11 09:09 | `data/DATA_CARD.md`: cập nhật Dataset 1, thêm Dataset 4–5 (tên miền), cập nhật Dataset 2–3 theo bộ câu thử 29 câu (16 `tu_viet`, 13 `data_that`) (Phát) | khai nguồn cho mọi data dùng trong bài; B26 còn chờ Vũ xác nhận nguồn |
 | 28/11 10:17 | Cải tiến `agent.py`, `tools.py`: Cải thiện guardrail và prompt injection | Các lượt từ chối trong benchmark chưa đạt, cần cải tiến |
 | 28/11 | Viết §0–§3, §5–§6 | hoàn thiện spec cho CP3 |
 | 28/11 | Thống nhất 65/566 review phàn nàn tính năng chống lừa (cột `loai` sau đọc tay) ở canvas, spec, metric_spec (chỉ dòng `why`), DATA_CARD | 64 là số máy gợi ý, không dùng làm số chính |
