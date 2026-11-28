@@ -10,8 +10,9 @@
 - **Trên tập nào, lọc gì:**
   1. Máy lọc theo từ khoá ngữ cảnh lừa đảo (`bị lừa`, `lừa đảo`, `mạo danh`, `tin nhắn lạ`, `link lạ`, `bị hack`, `chiếm đoạt`…) → 566 review, máy gợi ý nhóm ở cột `nhom_goi_y`.
   2. Người đọc tay từng review, gán `loai` và `dung_chu_de`: **1 chỉ khi người viết (hoặc người thân) đã bị lừa / suýt bị lừa / bị chiếm TK**; góp ý, nhận xét chung về lừa đảo, khen tính năng chống lừa → 0; không đủ thông tin → `mo_ho`, 0.
+  3. Sau khi gán nhãn (trên nguyên văn), cắt mỗi review còn **tối đa 2 câu** theo luật dữ liệu mục 5, phần bỏ đánh dấu `[…]`: 6 dòng `dung_chu_de = 1` chọn tay 2 câu chứa ý bị lừa; 111 dòng còn lại giữ câu chứa từ khoá đã khớp + 1 câu ngữ cảnh liền kề (quy tắc trong `cat_2_cau` của script) để vẫn thấy vì sao review lọt bộ lọc và vì sao bị gán nhãn. Thêm cột `link_nguon` (trang app trên Google Play) và `ngay_xem`.
 - **Mẫu số:** **70.294** review (tổng số review duy nhất kéo về được của 11 app), không phải số review khớp từ khoá.
-- **Script / công thức:** `evidence/mine_reviews.py` (kéo + lọc → `evidence/reviews_matched.csv`). Đếm lại sau đọc tay:
+- **Script / công thức:** `evidence/mine_reviews.py` (kéo + lọc + cắt 2 câu → `evidence/reviews_matched.csv`; nếu file đã có nhãn tay thì script ghi sang `reviews_matched_new.csv`, không ghi đè). Đếm lại sau đọc tay:
   ```
   python -c "import csv,collections as c;r=list(csv.DictReader(open('evidence/reviews_matched.csv',encoding='utf-8-sig')));print(c.Counter((x['loai'],x['dung_chu_de']) for x in r))"
   ```
@@ -53,10 +54,10 @@ Ghi chú: 566 review khớp = 483 `co_the_bi_lua` + 19 cuộc gọi + 64 tính n
 
 ## 4. ≥5 ví dụ cụ thể (mã dòng = số dòng trong `evidence/reviews_matched.csv`, đã bỏ tên người viết)
 
-1. **Dòng 208** · Techcombank · 1★ · 24/09/2026 · đúng lát cắt — "vợ mình không biết kích vào link lạ từ lúc nào và đã mất hơn 500tr đồng bao gồm tiền gửi và tiền sử dụng tk cá nhân… Khi gọi phản ánh thì tổng đài cũng chỉ bảo trình báo công an và số tiền này khó lấy lại"
+1. **Dòng 208** · Techcombank · 1★ · 24/09/2026 · đúng lát cắt — "Vừa rồi vợ mình không biết kích vào link lạ từ lúc nào và đã mất hơn 500tr đồng bao gồm tiền gửi và tiền sử dụng tk cá nhân. […] Khi gọi phản ánh thì tổng đài cũng chỉ bảo trình báo công an và số tiền này khó lấy lại thật sự mất niềm tin"
 2. **Dòng 519** · Cake · 1★ · 05/01/2025 · đúng lát cắt — "Mình bị bọn lừa đảo báo vào app mở tk tín dụng ảo rồi nó bảo để hệ thống xóa. Không biết giờ sao tk bị sao rồi"
 3. **Dòng 347** · TPBank · 1★ · 22/10/2024 · bị chiếm TK — "Ngày 16/10 tôi bị hack đt, sổ tiết kiệm của tôi ở ngân hàng ViB và TPbank bị bọn xấu vào tất toán và chuyển tiền đi"
-4. **Dòng 387** · Viettel Money · 1★ · 28/08/2026 · bị chiếm TK — "mình bị hack đt thế là nó vào cake vp bank vay 40 triệu. giải ngân luôn… giờ hàng tháng điện thoại giục đóng lãi"
+4. **Dòng 387** · Viettel Money · 1★ · 28/08/2026 · bị chiếm TK — "mình bị hack đt thế là nó vào cake vp bank vay 40 triệu. […] giờ hàng tháng điện thoại giục đóng lãi"
 5. **Dòng 70** · MoMo · 1★ · 10/09/2026 · bị chiếm TK — "mất tiền từ momo bị hack mất 5trieu báo ngân hàg r"
 6. **Dòng 475** · Cake · 4★ · 01/12/2025 · bị lừa khác — "ngân hàng thì cho vay nhanh nhưng gặp phải ng trung gian lừa đảo.lừa mất số tiền vừa vay xong"
 7. **Dòng 415** · Viettel Money · 1★ · 19/11/2025 · bị lừa khác — "bị lừa vay tiền trên app này mà chả hiểu sao lại cho sinh viên vay 1 số tiền lớn như vậy"

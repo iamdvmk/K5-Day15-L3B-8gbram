@@ -1,6 +1,14 @@
-"""Đào review Google Play về lừa đảo / tin nhắn giả mạo — bằng chứng pain Track E (v2).
+"""Đào review Google Play về lừa đảo / tin nhắn giả mạo — bằng chứng pain Track E (v3).
 
-Thay đổi so với v1:
+Thay đổi v3 (CP3, luật dữ liệu mục 5):
+- Mỗi review chỉ giữ tối đa 2 câu, ưu tiên câu chứa từ khoá đã khớp (xem cat_2_cau), phần bị cắt
+  đánh dấu "[…]" (lọc từ khoá và gán nhãn vẫn làm trên nguyên văn).
+- Thêm cột link_nguon (trang app trên Google Play) và ngay_xem (ngày chạy script).
+- KHÔNG ghi đè file đã gán nhãn tay: nếu evidence/reviews_matched.csv đã có nhãn dung_chu_de,
+  kết quả ghi sang evidence/reviews_matched_new.csv.
+  (Bản đã gán nhãn hiện tại: 6 dòng dung_chu_de = 1 được chọn tay 2 câu chứa ý bị lừa, không phải 2 câu đầu.)
+
+Thay đổi v2 so với v1:
 - Bỏ từ khoá gây nhiễu ("otp", "mất tiền", "bị trừ tiền" đứng một mình → 90% là lỗi app).
 - Dùng từ khoá theo NGỮ CẢNH lừa đảo (mạo danh, tin nhắn lạ, bấm link, kẻ gian, bị hack TK...).
 - Tách riêng nhóm review nói về TÍNH NĂNG chống lừa/giả mạo của app (dùng cho §3 + metric báo nhầm).
@@ -10,7 +18,10 @@ Cài:   pip install google-play-scraper pandas
 Chạy:  python evidence/mine_reviews.py
 Ra:    evidence/reviews_matched.csv  (đã bỏ tên người viết; cột nhom_goi_y do máy gợi ý, dung_chu_de đọc tay)
 """
+import os
 import re
+from datetime import date
+
 import pandas as pd
 from google_play_scraper import reviews, Sort
 
@@ -51,6 +62,39 @@ FEATURE = re.compile(
 CALL = re.compile(r"cuộc gọi|gọi điện|điện thoại gọi|số lạ gọi|gọi đến|gọi tới|nghe máy|bắt máy|đt kêu|dt kêu", re.I)
 MSG = re.compile(r"tin nhắn|nhắn tin|sms|zalo|messenger|link|đường dẫn|trang web|website|\bweb\b", re.I)
 
+NGAY_XEM = date.today().isoformat()
+SENT = re.compile(r"(?<=[.!?…])\s+")
+
+
+FALLBACK = re.compile(r"lừa|giả danh|mạo danh", re.I)
+
+
+def cat_2_cau(text):
+    """Giữ tối đa 2 câu (luật dữ liệu mục 5), ưu tiên câu chứa từ khoá đã khớp:
+    2 câu có từ khoá đầu tiên; chỉ 1 câu có từ khoá → thêm câu liền trước (hoặc liền sau nếu nó đứng đầu);
+    không câu nào có từ khoá → 2 câu đầu. Giữ nguyên chữ và thứ tự câu, phần bỏ đánh dấu "[…]"."""
+    cau = [s for s in SENT.split(text.strip()) if s.strip()]
+    if len(cau) <= 2:
+        return " ".join(cau)
+    hit = [k for k, s in enumerate(cau) if SCAM.search(s) or FEATURE.search(s)] or \
+          [k for k, s in enumerate(cau) if FALLBACK.search(s)]
+    if len(hit) >= 2:
+        idx = hit[:2]
+    elif hit:
+        idx = [hit[0] - 1, hit[0]] if hit[0] > 0 else [0, 1]
+    else:
+        idx = [0, 1]
+    out, prev = [], -1
+    for k in idx:
+        if k != prev + 1:
+            out.append("[…]")
+        out.append(cau[k])
+        prev = k
+    if prev < len(cau) - 1:
+        out.append("[…]")
+    return " ".join(out)
+
+
 all_rows, summary = [], []
 for app, app_id in APPS.items():
     try:
@@ -81,14 +125,21 @@ for app, app_id in APPS.items():
             "app": app,
             "sao": r["score"],
             "ngay": r["at"].date().isoformat(),
-            "noi_dung": text,
+            "noi_dung": cat_2_cau(text),
             "khop": ", ".join(sorted({m.group(0).lower() for m in re.finditer(SCAM.pattern + "|" + FEATURE.pattern, text, re.I)})),
             "nhom_goi_y": nhom,
             "dung_chu_de": "",  # đọc tay: 1 = người dùng kể bị lừa / nhận tin-link-cuộc gọi giả; 0 = không
+            "loai": "",  # đọc tay: nhóm chi tiết, định nghĩa ở evidence/data-mining.md
+            "link_nguon": f"https://play.google.com/store/apps/details?id={app_id}&hl=vi",
+            "ngay_xem": NGAY_XEM,
         })
     summary.append((app, n_scam, n_feat, n_call, n))
 
-pd.DataFrame(all_rows).to_csv("evidence/reviews_matched.csv", index=False, encoding="utf-8-sig")
+OUT = "evidence/reviews_matched.csv"
+if os.path.exists(OUT) and pd.read_csv(OUT, encoding="utf-8-sig", dtype=str).get("dung_chu_de", pd.Series(dtype=str)).notna().any():
+    OUT = "evidence/reviews_matched_new.csv"
+    print(f"  ! reviews_matched.csv đã có nhãn tay → không ghi đè, ghi sang {OUT}")
+pd.DataFrame(all_rows).to_csv(OUT, index=False, encoding="utf-8-sig")
 print(f"Gộp {N_PER_SORT} mới nhất + {N_PER_SORT} liên quan nhất / app (bỏ trùng), lang=vi, country=vn")
 tot = [0, 0, 0, 0]
 for app, s, f, c, n in summary:
