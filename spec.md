@@ -6,8 +6,8 @@
 - Track / đề: **Track E · Tài chính — hướng tự chọn: kiểm tin nhắn / link nghi giả danh ngân hàng trước khi người dùng làm theo** (gần ý "hỗ trợ khi giao dịch nghi lừa đảo" của file track E)
 - Data BTC cấp đã dùng: **Không** (Track E tự tìm data — xem `data/DATA_CARD.md`)
 
-## §0. Hiện tại việc này diễn ra thế nào *(guide 1.1)*
-- Luồng hiện tại của việc này, trong khoá hoặc trên app thật (3–5 bước; ảnh chụp từ tài khoản của mình, đã che thông tin):
+## §0. Hiện tại việc này diễn ra thế nào
+- Luồng hiện tại của việc này, trong khoá hoặc trên app thật:
   1. Người dùng nhận SMS mang tên ngân hàng / ví — tin giả có thể nằm **chung luồng brandname** với tin thật.
   2. Đọc lướt, thấy lý do gấp (khoá tài khoản, điểm thưởng sắp hết hạn, giao dịch lạ, phạt nguội…).
   3. Tự đoán thật / giả bằng cảm giác; một số người hỏi người thân hoặc gọi hotline, mất thời gian và không phải lúc nào cũng gọi được.
@@ -19,7 +19,7 @@
   - Tra cứu tên miền lừa đảo trên tinnhiemmang.vn/website-lua-dao (NCSC) và chongluadao.vn — người dùng phải tự mở web và tự tách link để tra.
   - Hỏi chatbot chung (ChatGPT…) — chưa kiểm mức độ người dùng làm việc này.
 
-## §1. Người dùng & bằng chứng *(guide 1.1, 1.2)*
+## §1. Người dùng & bằng chứng
 - Người dùng chính (một vai cụ thể): khách hàng cá nhân dùng app ngân hàng / ví điện tử, **ngay lúc vừa nhận một tin nhắn mang danh ngân hàng có link hoặc yêu cầu thao tác** và đang phân vân có làm theo không.
 - Việc họ cố làm xong (`động từ + đối tượng + bối cảnh`, không có chữ AI): **xác định một tin nhắn mang danh ngân hàng là thật hay giả trước khi bấm link hoặc làm theo yêu cầu.**
 - Hôm nay họ giải bằng gì, hỏng ở đâu, vì sao chưa bỏ: tự đoán / hỏi người thân / gọi hotline / tra tinnhiemmang.vn. Hỏng vì: tin giả nằm chung luồng brandname và link chỉ sai vài ký tự nên mắt thường khó thấy; hotline mất thời gian; tra web phải tự tách link và chỉ biết tên miền đã bị báo cáo. Chưa bỏ vì đó là các cách duy nhất có sẵn, miễn phí.
@@ -27,7 +27,7 @@
 - Bằng chứng — số chính + kết luận (chi tiết: `evidence/summary.md`): đào review Google Play 11 app → đọc tay 566 review: **22/566 (3,9%) kể bị lừa hoặc bị chiếm tài khoản**, 2/22 nói đúng kênh tin nhắn / link (VD *"vợ mình không biết kích vào link lạ từ lúc nào và đã mất hơn 500tr đồng"* — Techcombank 1★). 65/566 phàn nàn tính năng chống lừa hiện có chặn nhầm. **Kết luận: giả thuyết đúng một phần** — pain có thật và rất đắt (mất tiền), nhưng review chỉ cho cận dưới và ít nói về kênh tin nhắn. Kênh tin nhắn / link được đối chiếu với cảnh báo chính thức của ngân hàng và VNCERT (`evidence/summary.md`); nhóm không phỏng vấn / khảo sát, nên tần suất ở §2 là *(tự ước tính)*.
 
 
-## §2. Impact & quyết định chọn *(guide 1.3)*
+## §2. Impact & quyết định chọn
  
 | Hướng | Bao nhiêu người gặp | Bao nhiêu lần / tháng | Mỗi lần tốn gì | Impact / tháng | Làm kịp không | Chọn? |
 |---|---|---|---|---|---|---|
@@ -39,13 +39,13 @@
 - Hướng ĐÃ LOẠI + vì sao (giữ lại, đừng xoá): B — nhiều review hơn A (65 vs 22) nhưng hậu quả là phiền, không mất tiền, và quyết định thuộc ngân hàng; C — sau khi đã mất tiền, cần thẩm quyền. A chọn vì sai là mất tiền thật và làm trọn được trên văn bản tin nhắn trong 10 giờ.
 - Số lần / tháng của từng kiểu người dùng (dùng cho persona ở §8): `dung_it` 60% · 2 lần · `dung_vua` 30% · 6 lần · `dung_nhieu` 10% · 15 lần *(tự ước tính)* — khớp `cost/personas.yaml`.
 
-## §3. Giải pháp tương tự *(guide 2.1)*
+## §3. Giải pháp tương tự 
 - **Cảnh báo lừa đảo trong app MoMo / ngân hàng khi chuyển tiền**: đáng học — cảnh báo đúng lúc, ngay trước hành động · đáng né — chặn cứng, bắt chờ, bắt gõ xác nhận làm người dùng bực (review nhóm `tinh_nang_chong_lua`) · mình khác — chỉ cảnh báo + giải thích dấu hiệu, người dùng luôn tự quyết, và kiểm **trước khi bấm link** chứ không chờ đến lúc chuyển tiền.
 - **Phát hiện "ứng dụng giả mạo" / chặn trợ năng của MB, VietinBank**: đáng học — kiểm tự động, không cần người dùng biết kỹ thuật · đáng né — báo nhầm (nhận Telegram là app giả mạo, người khiếm thị không dùng được TalkBack) · mình khác — đo báo nhầm bằng metric `false_positive_rate` và đặt ngưỡng ≤ 30%.
 - **tinnhiemmang.vn / chongluadao.vn tra cứu tên miền lừa đảo**: đáng học — danh sách có nguồn chính thức (nhóm dùng làm dữ liệu cho công cụ tra tên miền) · đáng né — người dùng phải tự mở web, tự tách link, và chỉ biết tên miền **đã** bị báo cáo · mình khác — dán nguyên tin, tự tách link và xét thêm dấu hiệu khác (xin OTP, hối thúc, giả danh); tên miền chưa có trong danh sách thì nói "chưa xác định", không kết luận an toàn.
 - **Hỏi chatbot chung (ChatGPT…)**: đáng học — linh hoạt, trả lời bằng ngôn ngữ tự nhiên · đáng né — không có căn cứ, có thể bị lệnh chèn trong tin đánh lừa, có thể nói "an toàn" · mình khác — lớp quy tắc chạy trước model, model không hạ được mức Cao, không bao giờ nói "an toàn tuyệt đối".
 
-## §4. Thiết kế (nháp — hoàn thiện ở CP3)
+## §4. Thiết kế
  
 **Lát cắt một câu:** Khách hàng app ngân hàng dán một tin nhắn đáng ngờ → AI chấm mức rủi ro (Cao/Trung bình/Thấp), chỉ ra dấu hiệu và khuyên bước tiếp theo → đo tỉ lệ bắt đúng tin lừa đảo và tỉ lệ báo nhầm tin thật.
  
@@ -97,7 +97,7 @@ flowchart LR
  
 **Phần còn giả:** Không còn phần giả ở luồng chính — đã nối model thật `gpt-5.4-mini-2026-03-17` (`codebase/ai.py`, key trong `.env`). Chế độ `fake` chỉ chạy khi không có `MODEL_PROVIDER` / key, output khi đó có nhãn `[DEMO MOCK]`. Dữ liệu tên miền là danh sách tĩnh lấy tay ngày 27/11/2026, không cập nhật tự động.
 
-## §5. Chỗ khó — 4 lớp + ≥6 kịch bản + 2 tấn công *(guide 2.3)*
+## §5. Chỗ khó — 4 lớp + ≥6 kịch bản + 2 tấn công
  
 | Kịch bản | Lớp (1–4) | Hành vi mong muốn (nói gì, hiện gì, cho làm gì tiếp) | Câu thử |
 |---|---|---|---|
@@ -177,6 +177,8 @@ flowchart LR
 | 28/11 | Sửa `cost/personas.yaml` (giá gpt-5.4-mini / nano, quy mô 10k / 50k / 200k), chạy `simulate-1`, viết `cost/cost-estimate.md`, đồng bộ §2, điền §8 | mô phỏng chi phí CP4 |
 | 28/11 | Điền §9, sửa §0, §4 (bảng công cụ, phần còn giả), §7 (số câu) | hoàn thiện spec cho CP4 |
 | 28/11 | Thêm `app.py` (giao diện Streamlit gọi lại `answer()`, không đổi logic) | phục vụ demo; kết quả đo vẫn là lượt 2 |
+| 28/11 | Thêm demo-slides.pdf + link video dự phòng vào README | nộp CP4 |
+| 28/11 | Điền eval/README mục 1, mục 3 (Phát chấm độc lập x/5); sửa why 64→65 trong metric_spec | đồng bộ số với cột loai |
 
 **Sau CP4 (đến 23:59 Thứ Bảy 28/11)** (sửa theo góp ý — không sửa chuẩn "đạt", câu thử, số bằng chứng, kết quả các lượt đã chạy)
 

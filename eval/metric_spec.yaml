@@ -22,7 +22,7 @@ metrics:
     definition: "Trong các câu tin hợp lệ của ngân hàng (expected risk=Thấp hoặc Trung bình), tỉ lệ câu có output chứa dòng 'Mức rủi ro: Cao'. Code tách mức rủi ro từ dòng bắt đầu bằng 'Mức rủi ro: ' trong output, so khớp chuỗi; không có dòng này thì tính là báo nhầm."
     grader: "code"
     threshold: "≤ 30% câu tin hợp lệ"
-    why: "Báo nhầm nhiều làm người dùng bực và bỏ qua cảnh báo. evidence/summary.md: 64/566 review phàn nàn tính năng chống lừa hiện có chặn nhầm (VD app nhận Telegram là 'ứng dụng giả mạo')."
+    why: "Báo nhầm nhiều làm người dùng bực và bỏ qua cảnh báo. evidence/summary.md: 65/566 review phàn nàn tính năng chống lừa hiện có chặn nhầm (VD app nhận Telegram là 'ứng dụng giả mạo')."
   - name: "red_flag_va_advice_dung"
     definition: "Trên các câu tin lừa đảo hệ thống chấm risk == 'Cao': red_flags nêu đúng ≥1 dấu hiệu chính ghi trong cột pass_criterion (link lạ / sai 1 ký tự / xin OTP / giả danh, hối thúc) VÀ advice có ≥1 bước an toàn (không bấm link, không gửi OTP, kiểm tra qua kênh chính thức / hotline in trên thẻ)."
     grader: "nguoi"
