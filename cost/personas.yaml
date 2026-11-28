@@ -8,45 +8,40 @@
 sessions: 50        # số phiên mô phỏng — bản nộp ≥50
 seed: 42            # giữ cố định để chạy lại ra cùng chuỗi phiên
 
-users:              # số người dùng thật nếu đưa vào dùng — 3 kịch bản, ở quy mô thật của sản phẩm
-                    # track A: khoá học · track B–F: người dùng của sản phẩm / nhóm nhắm tới, nguồn công khai có link
-  low: 300
-  base: 700
-  high: 1000
-  source: "(ví dụ) track A — thay bằng số của nhóm. Cơ sở: lớp L3 hơn 700 học viên (README hackathon); thấp, cao: (tự ước tính)"
+users:              # quy mô người dùng thật cho tính năng kiểm tin nhắn trên 1 app ngân hàng / ví tầm trung tại VN
+  low: 10000
+  base: 50000
+  high: 200000
+  source: "Track E - quy mô triển khai tính năng trên 1 app ngân hàng / ví tầm trung tại Việt Nam: thấp 10.000 (nhóm pilot ban đầu), cơ sở 50.000 (nhóm khách hàng dùng thường xuyên), cao 200.000 (mở rộng đại trà) - (tự ước tính, sẽ đối chiếu thêm quy mô app ở spec.md §2)"
 
-personas:           # ≥3 kiểu người dùng; share cộng lại = 1
+personas:           # 3 kiểu người dùng app ngân hàng / ví; tổng share = 1.0
   - name: dung_it
-    share: 0.5              # tỉ lệ người dùng kiểu này
-    uses_per_month: 4       # số phiên / người / tháng
-    turns_per_session: 1    # số lượt hỏi trong một phiên
-    source: "(ví dụ) phỏng vấn P1, P3 — thay bằng nguồn của nhóm"
+    share: 0.60             # 60% khách hàng chỉ dán kiểm tra khi gặp tin nhắn/link thật sự đáng ngờ
+    uses_per_month: 2       # ~2 lần / tháng
+    turns_per_session: 1    # 1 lượt dán tin nhắn / phiên
+    source: "(tự ước tính) khách hàng phổ thông chỉ kiểm tra khi nhận tin nghi vấn — cập nhật theo phỏng vấn P1–P3 nếu có số"
   - name: dung_vua
-    share: 0.3
-    uses_per_month: 10
-    turns_per_session: 3
-    source: "(ví dụ) khảo sát n = 24, câu 3"
+    share: 0.30             # 30% khách hàng giao dịch online thường xuyên, hay nhận SMS/Zalo ưu đãi & thông báo
+    uses_per_month: 6       # ~6 lần / tháng
+    turns_per_session: 2    # 2 lượt / phiên (kiểm tin + kiểm thêm link/tin liên quan)
+    source: "(tự ước tính) khách hàng mua sắm/giao dịch online nhiều — cập nhật theo phỏng vấn P1–P3 nếu có số"
   - name: dung_nhieu
-    share: 0.2
-    uses_per_month: 20
-    turns_per_session: 5
-    source: "(ví dụ) data/preclass: đếm số lượt / người — cách đếm ở evidence/data-mining.md"
-# Mỗi lượt hỏi lấy ngẫu nhiên một đầu vào trong eval/benchmark.csv (type thuong và kho).
-# Persona hỏi kiểu riêng: thêm vào persona đó
-#     types: [thuong, kho, tu_choi]
-# hoặc
-#     inputs: ["câu hỏi kiểu 1", "câu hỏi kiểu 2"]
+    share: 0.10             # 10% chủ shop online hoặc người dùng thận trọng / người lớn tuổi kiểm tra nhiều tin nhắn
+    uses_per_month: 15      # ~15 lần / tháng
+    turns_per_session: 2    # 2 lượt / phiên
+    types: [thuong, kho, tu_choi]
+    source: "(tự ước tính) nhóm người dùng nhận nhiều tin chuyển khoản/lừa đảo hoặc kiểm tra thay cho người thân"
 
 prices:             # USD / 1 triệu token — chép từ further-reading/model-prices.md của repo đề. ≥2 mức model
   - model: gemini-3.1-flash-lite
     input: 0.25
     output: 1.50
-    source: "(ví dụ) https://ai.google.dev/gemini-api/docs/pricing · xem 25/11/2026"
+    source: "https://ai.google.dev/gemini-api/docs/pricing - xem 25/11/2026"
   - model: gemini-4-hydrogen
     input: 1.50
     output: 7.50
-    source: "(ví dụ) https://ai.google.dev/gemini-api/docs/pricing · xem 25/11/2026"
+    source: "https://ai.google.dev/gemini-api/docs/pricing - xem 25/11/2026"
 
-usd_to_vnd:         # tuỳ chọn: điền thì bản tóm tắt in thêm tiền Việt
-  rate:
-  source:
+usd_to_vnd:
+  rate: 25400
+  source: "Tỉ giá tham khảo ~25.400 VND/USD (tự ước tính làm tròn, xem 28/11/2026)"
