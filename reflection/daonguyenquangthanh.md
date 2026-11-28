@@ -1,10 +1,10 @@
 # Reflection — Đào Nguyễn Quang Thành
 
-1. **Vai trò + phần mình làm:** Mình phụ trách luồng AI kiểm tin nhắn tài chính: nối model thật trong `codebase/ai.py`, xây luồng và guardrail trong `codebase/agent.py`, công cụ che dữ liệu và tra tên miền trong `codebase/tools.py`.
-   Mình kiểm các trường hợp link giả, prompt injection, OTP, mật khẩu và yêu cầu ngoài phạm vi; phần code CP3 có trong các commit `fd88214`, `3a6a975`.
-   Sau lượt 1, mình sửa nhánh từ chối xác minh cuộc gọi và kiểm thêm các ca tổng hợp; thay đổi sau đó còn ở working tree, chưa tính là commit.
+1. **Vai trò + phần mình làm:** Ở CP2, mình dựng luồng mock trong `codebase/agent.py` và `codebase/tools.py` để chạy thử từ đầu vào đến kết quả; hai commit là `a7b9b86` và `9211a3f`.
+   Sang CP3, mình nối model thật trong `codebase/ai.py`, xây guardrail và tra tên miền trong `agent.py`, `tools.py`; các commit chính là `fd88214` và `3a6a975`.
+   Sau lượt 1, mình sửa từ chối xác minh cuộc gọi, kiểm prompt injection, che dữ liệu và nhiều URL; phần cải tiến cùng reflection được push ở commit `dc8d90f`.
 
-2. **AI hỗ trợ mình thế nào:** Mình dùng Codex (OpenAI) hỗ trợ viết code, prompt trả JSON mức rủi ro/dấu hiệu và gợi ý các ca kiểm guardrail; đã khai ở `docs/ai-usage.md`.
+2. **AI hỗ trợ mình thế nào:** Mình dùng Codex (OpenAI) hỗ trợ dựng luồng mock CP2, viết phần gọi model thật, prompt trả JSON mức rủi ro/dấu hiệu và gợi ý ca kiểm guardrail; đã khai ở `docs/ai-usage.md`.
    Mình đọc lại code, đối chiếu output với trace, thử các ca ngoài benchmark và sửa các chỗ AI đề xuất chưa đúng, như bỏ sót URL thứ hai hoặc để chỉ dẫn nguy hiểm lọt vào dòng `Dấu hiệu`.
    Kết quả model chỉ được dùng sau khi lớp quy tắc giữ mức rủi ro tối thiểu và dữ liệu nhạy cảm đã được che.
 
