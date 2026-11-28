@@ -50,6 +50,6 @@ Lượt chạy lại vì lỗi kỹ thuật, lượt sau CP4: ghi thêm dòng, k
 
 ## 6. Lỗi chính
 
-- **Lượt 1 (23/29 · 79%):** Nhóm lỗi lớn nhất là guardrail che mật khẩu/OTP dừng sớm trước LLM (4 câu: B21, B22, B25, B26), kèm 1 lỗi rule OTP bắt nhầm câu cảnh báo phủ định (B27) và 1 lỗi thiếu từ chối ngoài phạm vi cuộc gọi/SĐT (B29 — làm trượt điều kiện cứng 100% `tu_choi`).
+- **Lượt 1 (23/29 · 79%):** Nhóm lỗi lớn nhất là guardrail che mật khẩu/OTP dừng sớm trước LLM (4 câu: B21, B22, B25, B26), kèm 1 lỗi rule OTP bắt nhầm câu cảnh báo phủ định (B27) và 1 lỗi thiếu từ chối ngoài phạm vi cuộc gọi/SĐT (B29 - làm trượt điều kiện cứng 100% `tu_choi`).
 - **Đã sửa ở lượt 2 (24/29 · 83%):** Thêm nhánh từ chối rõ cho yêu cầu kiểm tra cuộc gọi/SĐT (B29 đạt → `tu_choi` 3/3 = 100%, đạt chuẩn `spec.md` §7, 0 câu tệ đi).
-- **Còn lại:** 5 câu (`B21, B22, B25, B26, B27`) do guardrail/rule từ khóa OTP-mật khẩu còn nhạy quá mức — ưu tiên sửa tiếp nếu có thêm 1 tuần (chi tiết xem `eval/report.md`).
+- **Còn lại:** 5 câu (`B21, B22, B25, B26, B27`) do guardrail/rule từ khóa OTP-mật khẩu còn nhạy quá mức - ưu tiên sửa tiếp nếu có thêm 1 tuần (chi tiết xem `eval/report.md`).

@@ -1,46 +1,49 @@
 # Mô phỏng chi phí khi dùng thật — điền ở guide bước 4.2.
 # Ôn lại: ngày 13, ngày 1, ngày 14 · lab ngày 13, lab ngày 14.
-# Mọi số phải có nguồn (data / phỏng vấn / khảo sát / quy mô khoá có nguồn) hoặc ghi rõ "(tự ước tính)".
-# Chạy: python run.py simulate --try   (10 phiên, kiểm khung — làm trước CP3)
-#       python run.py simulate         (đủ số phiên dưới đây — bản nộp CP4)
-# Thay mọi dòng "(ví dụ)" bằng số và nguồn của nhóm; simulate nhắc nếu còn sót.
+# Mọi số phải có nguồn (data / phỏng vấn / khảo sát / quy mô sản phẩm có nguồn) hoặc ghi rõ "(tự ước tính)".
+# Chạy: python run.py simulate --try                         (10 phiên, kiểm khung)
+#       python run.py simulate --rate-from eval/run-2.csv    (≥50 phiên, bản nộp CP4)
 
 sessions: 50        # số phiên mô phỏng — bản nộp ≥50
 seed: 42            # giữ cố định để chạy lại ra cùng chuỗi phiên
 
-users:              # quy mô người dùng thật cho tính năng kiểm tin nhắn trên 1 app ngân hàng / ví tầm trung tại VN
-  low: 10000
-  base: 50000
-  high: 200000
-  source: "Track E - quy mô triển khai tính năng trên 1 app ngân hàng / ví tầm trung tại Việt Nam: thấp 10.000 (nhóm pilot ban đầu), cơ sở 50.000 (nhóm khách hàng dùng thường xuyên), cao 200.000 (mở rộng đại trà) - (tự ước tính, sẽ đối chiếu thêm quy mô app ở spec.md §2)"
+users:              # 3 kịch bản quy mô người dùng cho tính năng kiểm tin nhắn app ngân hàng / ví (Track E)
+  low: 1000         # nhóm thí điểm ban đầu — khớp đúng quy mô 1.000 người dùng ở spec.md §2
+  base: 10000       # triển khai cho 1 phân khúc khách hàng thường xuyên của app ngân hàng tầm trung
+  high: 100000      # mở rộng đại trà trên tập khách hàng hoạt động của app ngân hàng / ví
+  source: "Track E — thấp: 1.000 người khớp nhóm thí điểm trong spec.md §2 (tự ước tính); cơ sở: 10.000 người và cao: 100.000 người khi mở rộng trên 1 app ngân hàng/ví tầm trung tại VN (tự ước tính)"
 
-personas:           # 3 kiểu người dùng app ngân hàng / ví; tổng share = 1.0
+personas:           # 3 kiểu người dùng theo spec.md §2 (ít 1 · vừa 4 · nhiều 10 tin/tháng; trung bình ~4,15 tin/người/tháng)
   - name: dung_it
-    share: 0.60             # 60% khách hàng chỉ dán kiểm tra khi gặp tin nhắn/link thật sự đáng ngờ
-    uses_per_month: 2       # ~2 lần / tháng
+    share: 0.35             # 35% khách hàng ít nhận tin lạ, thỉnh thoảng mới kiểm tra
+    uses_per_month: 1       # 1 tin / tháng (spec.md §2)
     turns_per_session: 1    # 1 lượt dán tin nhắn / phiên
-    source: "(tự ước tính) khách hàng phổ thông chỉ kiểm tra khi nhận tin nghi vấn — cập nhật theo phỏng vấn P1–P3 nếu có số"
+    source: "spec.md §2 (tự ước tính: nhóm dùng ít 1 tin/tháng; evidence/summary.md không dùng phỏng vấn)"
   - name: dung_vua
-    share: 0.30             # 30% khách hàng giao dịch online thường xuyên, hay nhận SMS/Zalo ưu đãi & thông báo
-    uses_per_month: 6       # ~6 lần / tháng
-    turns_per_session: 2    # 2 lượt / phiên (kiểm tin + kiểm thêm link/tin liên quan)
-    source: "(tự ước tính) khách hàng mua sắm/giao dịch online nhiều — cập nhật theo phỏng vấn P1–P3 nếu có số"
+    share: 0.45             # 45% khách hàng phổ thông dùng app ngân hàng, nhận vài tin đáng ngờ mỗi tháng
+    uses_per_month: 4       # 4 tin / tháng (spec.md §2)
+    turns_per_session: 1    # 1 lượt dán tin nhắn / phiên
+    source: "spec.md §2 (tự ước tính: nhóm dùng vừa 4 tin/tháng)"
   - name: dung_nhieu
-    share: 0.10             # 10% chủ shop online hoặc người dùng thận trọng / người lớn tuổi kiểm tra nhiều tin nhắn
-    uses_per_month: 15      # ~15 lần / tháng
-    turns_per_session: 2    # 2 lượt / phiên
+    share: 0.20             # 20% người lớn tuổi / chủ shop online hay nhận tin rác, link lạ
+    uses_per_month: 10      # 10 tin / tháng (spec.md §2)
+    turns_per_session: 2    # 2 lượt / phiên (kiểm tin + kiểm thêm link/tin liên quan)
     types: [thuong, kho, tu_choi]
-    source: "(tự ước tính) nhóm người dùng nhận nhiều tin chuyển khoản/lừa đảo hoặc kiểm tra thay cho người thân"
+    source: "spec.md §2 (tự ước tính: nhóm dùng nhiều 10 tin/tháng)"
 
-prices:             # USD / 1 triệu token — chép từ further-reading/model-prices.md của repo đề. ≥2 mức model
-  - model: gemini-3.1-flash-lite
-    input: 0.25
-    output: 1.50
-    source: "https://ai.google.dev/gemini-api/docs/pricing - xem 25/11/2026"
-  - model: gemini-4-hydrogen
-    input: 1.50
-    output: 7.50
-    source: "https://ai.google.dev/gemini-api/docs/pricing - xem 25/11/2026"
+prices:             # USD / 1 triệu token — ≥2 mức model (rẻ hơn, model đang chạy thật, mạnh hơn)
+  - model: gpt-5.4-nano
+    input: 0.20
+    output: 1.25
+    source: "https://openai.com/api/pricing - xem 28/11/2026 (mức rẻ hơn để so sánh)"
+  - model: gpt-5.4-mini
+    input: 0.75
+    output: 4.50
+    source: "https://openai.com/api/pricing - xem 28/11/2026 (model đang chạy thật ở eval/run-2.csv: gpt-5.4-mini-2026-03-17)"
+  - model: gpt-5.4
+    input: 2.50
+    output: 15.00
+    source: "https://openai.com/api/pricing - xem 28/11/2026 (mức mạnh hơn để so sánh)"
 
 usd_to_vnd:
   rate: 25400

@@ -132,10 +132,10 @@ flowchart LR
 | 2 | 24/29 | 83% | `run-2@20261128-104318` |
 
 ## §8. Chi phí khi dùng thật *(guide 4.2)*
-- Persona + giá: `cost/personas.yaml` · lượt mô phỏng: `cost/simulate-__.csv` (__ phiên)
-- Chi phí / task thành công: __ (model __) · __ (model __)
-- Chi phí / tháng ở quy mô thật: thấp __ · cơ sở __ · cao __ → chi tiết `cost/cost-estimate.md`
-- So với impact / người / tháng (§2): đáng làm không, vì sao:
+- Persona + giá: `cost/personas.yaml` · lượt mô phỏng: `cost/simulate-1.csv` (50 phiên, seed 42, 0/50 lỗi, tỉ lệ đạt 24/29 = 83% từ `eval/run-2.csv`)
+- Chi phí / task thành công: **$0.00053 (≈ 14 ₫)** (`gpt-5.4-mini`, đang dùng) · **$0.00015 (≈ 4 ₫)** (`gpt-5.4-nano`) · **$0.0018 (≈ 45 ₫)** (`gpt-5.4`)
+- Chi phí / tháng ở quy mô thật (`gpt-5.4-mini`): thấp (1.000 người) **$2.16 (≈ 54.848 ₫)** · cơ sở (10.000 người) **$21.59 (≈ 548.481 ₫)** · cao (100.000 người) **$215.94 (≈ 5.484.811 ₫)** → chi tiết `cost/cost-estimate.md`
+- So với impact / người / tháng (§2): **Rất đáng làm** — chi phí chỉ **~55 ₫/người/tháng** (≈ 55k ₫/tháng cho nhóm thí điểm 1.000 người), rất nhỏ so với ~20 phút/người/tháng tiết kiệm được và thiệt hại mất tiền thật khi bị lừa (review ghi nhận ca mất >500 triệu).
 
 ## §9. Rủi ro & an toàn
 - Dữ liệu: đã ẩn danh gì, không thu gì, không đưa gì vào model gói miễn phí:
