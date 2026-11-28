@@ -1,0 +1,14 @@
+# Reflection — Nguyễn Long Vũ
+1. Vai trò + phần mình làm (trỏ tới file / commit):
+   - Vai trò: **Eval & Chi phí** của nhóm 8gbram (Track E — kiểm tra tin nhắn tài chính đáng ngờ).
+   - CP1-CP2: xây dựng 4 metric trong `eval/metric_spec.yaml`, bộ câu thử `eval/benchmark.csv`, hồ sơ đánh giá `eval/README.md` và chạy kiểm thử khung với bản mock (`eval/run-mock.csv`).
+   - CP3-CP4: Mở rộng `eval/benchmark.csv` lên 29 câu (bổ sung tin hợp lệ, tên miền lạ không có trong danh sách, câu ngoài phạm vi cuộc gọi và gắn link bài cảnh báo chính thức + ngày xem đạt 13/29 `data_that`); chấm `eval/run-1.csv` (`23/29 · 79%`), phân nhóm lỗi lượt 1 vào `eval/report.md`, cập nhật bảng kết quả `spec.md` §7, và thiết lập 3 persona + 3 mức giá model trong `cost/personas.yaml` để chạy mô phỏng chi phí.
+
+2. AI hỗ trợ mình thế nào (việc gì, công cụ gì, chỗ nào phải sửa lại output AI):
+   - Công cụ: trợ lý coding AI (Antigravity / Gemini) dùng để rà soát độ kiểm chứng được của `pass_criterion`, đối chiếu các kiểu lừa đảo từ review thật để bổ sung câu thử khó (link rút gọn `bit.ly`, cài `.apk`, vay hộ, giả CIC), tìm link bài cảnh báo chính thức (Vietcombank, Bộ Công An, VNBA, VTV) và nháp khung `eval/README.md`, `eval/report.md`, `cost/personas.yaml`.
+   - Những chỗ phải tự kiểm và sửa lại: (a) AI viết `<= 30%` trong `eval/metric_spec.yaml` bị `python run.py check` bắt nhầm là placeholder `<…>`, phải đổi sang `≤`/`≥`; (b) một số dòng CSV AI thêm bị thiếu ngoặc kép ở ô có dấu phẩy (B19) hoặc chưa khớp phần mình tự thay bằng email sao kê MB Visa thật (B26), phải luôn chạy `python run.py check` và rà lại từng dòng; (c) khi chấm `eval/run-1.csv`, phải đối chiếu kỹ `pass_criterion` từng câu để sửa nhầm nhãn `False negative`/`False positive` (B26, B27) và lật `pass` của B21 từ `1` sang `0`.
+
+3. Một câu thử trượt của nhóm và mình học được gì từ nó:
+   - Câu trượt tiêu biểu ở lượt 1 (`run-1@20261128-085838`): **B21** (`[CIC] ... dang nhap ngay tai cic-baomat.xyz de doi mat khau...`) nằm trong cụm 4/6 lỗi cùng gốc (**B21, B22, B25, B26**).
+   - Nguyên nhân: lớp guardrail che mật khẩu/OTP chạy trước LLM bắt quá rộng theo từ khóa (gặp cụm `"doi mat khau"`, `"mat khau hay ma OTP"` hay `"Mật khẩu là Số Giấy tờ tùy thân"` là ngắt luôn trước khi gọi model, `model_calls = 0`). Do đó trên tin lừa đảo (B21, B22) hệ thống bỏ sót hoàn toàn dấu hiệu giả mạo CIC / link `cic-baomat.xyz` hoặc ngữ cảnh xin OTP liên kết Apple Pay, còn trên tin hợp lệ (B25, B26) lại báo nhầm thành `Cao`.
+   - Bài học: Guardrail quy tắc cứng rất cần để chặn rủi ro nghiêm trọng (như prompt injection B09 hay lộ mật khẩu thật B10), nhưng nếu điều kiện bắt quá thô và dừng sớm trước LLM thì lại gây đồng thời cả false positive lẫn false negative. Đọc trace thật (`model_calls = 0`) và gom lỗi theo nguyên nhân gốc giúp tìm ra một cải tiến trúng đích cho lượt 2 thay vì sửa chắp vá từng câu thử.

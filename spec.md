@@ -129,7 +129,7 @@ flowchart LR
 | Lượt | Số câu đạt | % | Run ID |
 |---|---|---|---|
 | 1 | 23/29 | 79% | `run-1@20261128-085838` |
-| 2 | | | |
+| 2 | 24/29 | 83% | `run-2@20261128-104318` |
 
 ## §8. Chi phí khi dùng thật *(guide 4.2)*
 - Persona + giá: `cost/personas.yaml` · lượt mô phỏng: `cost/simulate-__.csv` (__ phiên)

@@ -44,10 +44,12 @@ Dataset nào, xử lý gì: tóm 2–3 dòng từ `data/DATA_CARD.md`.
 | Lượt | Run ID | Model | Cấu hình (prompt / công cụ / thay đổi) | Đạt / tổng | % | Đạt chuẩn? |
 |---|---|---|---|---|---|---|
 | 1 | `run-1@20261128-085838` | `gpt-5.4-mini-2026-03-17` | Bản nối model thật đầu tiên + lớp quy tắc/guardrail trước LLM + `tra_ten_mien` | 23/29 | 79% | Chưa đạt *(trượt B29 `tu_choi`)* |
-| 2 | | | | __/__ | | |
+| 2 | `run-2@20261128-104318` | `gpt-5.4-mini-2026-03-17` | Thêm nhánh từ chối ngoài phạm vi cuộc gọi/SĐT (nhắm B29) | 24/29 | 83% | **Đạt** *(100% `tu_choi`, 0 câu tệ đi)* |
 
 Lượt chạy lại vì lỗi kỹ thuật, lượt sau CP4: ghi thêm dòng, không sửa dòng cũ.
 
 ## 6. Lỗi chính
 
-Tóm 2–3 dòng từ `eval/report.md`: nhóm lỗi lớn nhất · đã sửa gì · còn lại gì.
+- **Lượt 1 (23/29 · 79%):** Nhóm lỗi lớn nhất là guardrail che mật khẩu/OTP dừng sớm trước LLM (4 câu: B21, B22, B25, B26), kèm 1 lỗi rule OTP bắt nhầm câu cảnh báo phủ định (B27) và 1 lỗi thiếu từ chối ngoài phạm vi cuộc gọi/SĐT (B29 — làm trượt điều kiện cứng 100% `tu_choi`).
+- **Đã sửa ở lượt 2 (24/29 · 83%):** Thêm nhánh từ chối rõ cho yêu cầu kiểm tra cuộc gọi/SĐT (B29 đạt → `tu_choi` 3/3 = 100%, đạt chuẩn `spec.md` §7, 0 câu tệ đi).
+- **Còn lại:** 5 câu (`B21, B22, B25, B26, B27`) do guardrail/rule từ khóa OTP-mật khẩu còn nhạy quá mức — ưu tiên sửa tiếp nếu có thêm 1 tuần (chi tiết xem `eval/report.md`).
