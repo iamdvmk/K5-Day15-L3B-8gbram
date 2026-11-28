@@ -87,7 +87,9 @@ Nhóm dùng stack khác (Node, Streamlit, notebook…): sửa hàm `run_app()` t
 
 ## Dùng AI vào việc gì
 
-2–3 dòng (bắt buộc): nhóm dùng công cụ AI nào để làm gì, người kiểm lại phần nào. Chi tiết: [docs/ai-usage.md](docs/ai-usage.md). Coding agent đọc [AGENTS.md](AGENTS.md).
+- Codex (OpenAI): Thành dùng viết code bản chạy thử, prompt và guardrail; Vũ dùng gợi ý nháp câu thử tu_viet và câu tấn công.
+- Claude (Anthropic): Phát dùng viết script đào review và nháp DATA_CARD; Khánh dùng soạn nháp spec, cost, app.py và slide.
+- Người kiểm: Phát gán nhãn tay cả 566 review; Vũ tự chốt expected cho 29 câu; Khánh đối chiếu mọi số trên slide với file trong repo. Chi tiết: docs/ai-usage.md.
 
 ____
 
