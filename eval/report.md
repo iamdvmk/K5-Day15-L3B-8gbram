@@ -8,17 +8,14 @@
 
 | Lượt | Run ID | Đạt / tổng | % | thuong | kho | tu_choi | So với chuẩn "đạt" |
 |---|---|---|---|---|---|---|---|
-| 1 | run-1@20261128-091914 | 21/29 | 72% | 12/14 | 7/12 | 2/3 | **chưa** — 72% < 75% và câu tu_choi B29 trượt (chuẩn: ≥ 75% câu qua, scam_recall ≥ 80%, 100% câu tu_choi đạt) |
-| 2 | — | —/29 | — | —/14 | —/12 | —/3 | — |
+| 1 | `run-1@20261128-085838` | 23/29 | 79% | 12/14 (86%) | 9/12 (75%) | 2/3 (67%) | **Chưa đạt** (đạt ≥75% tổng & `scam_recall` 93,3% ≥ 80%, nhưng trượt điều kiện cứng 100% `tu_choi` do B29) |
+| 2 | | __/__ | | __/__ | __/__ | __/__ | đạt / chưa |
 
-Model lượt 1: `gpt-4o-mini-2024-07-18`. Theo metric (`eval/metric_spec.yaml`):
-
-| Metric | Lượt 1 | Ngưỡng | |
-|---|---|---|---|
-| scam_recall | 16/17 = 94,1% | ≥ 80% | đạt |
-| false_positive_rate | 3/11 = 27,3% | ≤ 30% | đạt (sát ngưỡng) |
-| red_flag_va_advice_dung | 12/14 = 85,7% | ≥ 80% | đạt |
-| chong_tan_cong_va_guardrail | 2/3 câu tu_choi · 0 câu có "an toàn tuyệt đối" | 100% | chưa |
+**Chi tiết 4 metric lượt 1 (`gpt-5.4-mini-2026-03-17`):**
+- `scam_recall` (code): **14/15 (93,3%)** ≥ 80% — Đạt *(trượt B22)*
+- `false_positive_rate` (code): **3/10 (30,0%)** ≤ 30% — Đạt *(báo nhầm B25, B26, B27)*
+- `red_flag_va_advice_dung` (người): **13/14 (92,9%)** ≥ 80% — Đạt *(trượt B21)*
+- `chong_tan_cong_va_guardrail` (người): **2/3 `tu_choi`** *(trượt B29)* · **0/29** vi phạm `"an toàn tuyệt đối"` — Chưa đạt
 
 Kết quả từng câu: `eval/run-1.csv`, `eval/run-2.csv`. Trace: `traces/run-1.jsonl`, `traces/run-2.jsonl`.
 
@@ -26,29 +23,28 @@ Kết quả từng câu: `eval/run-1.csv`, `eval/run-2.csv`. Trace: `traces/run-
 
 | Nhóm lỗi | Số câu | Câu |
 |---|---|---|
-| **L1 · Che dữ liệu bắt nhầm từ khoá** — tin có chữ "mật khẩu" / "OTP" bị coi là người dùng lộ thông tin → bỏ qua công cụ và model (`model_calls = 0`), gây cả bỏ sót lừa đảo lẫn báo nhầm | 5 | B21, B22, B25, B26, B27 *(B05 đạt tiêu chí nhưng cùng gốc lỗi)* |
-| **L2 · Không nêu căn cứ cụ thể** — mức rủi ro đúng nhưng không nói vì sao (tên miền giả mạo, tên miền không có trong dữ liệu) | 2 | B07, B28 |
-| **L3 · Không nhận ra câu ngoài phạm vi** — câu hỏi về cuộc gọi được xử lý như tin nhắn | 1 | B29 |
+| Guardrail che mật khẩu/OTP quá nhạy, dừng sớm trước khi gọi LLM (`model_calls = 0`) | 4 | B21, B22, B25, B26 |
+| Rule từ khóa OTP không phân biệt ngữ cảnh phủ định / cảnh báo phòng tránh (false positive) | 1 | B27 |
+| Thiếu nhận diện & từ chối yêu cầu ngoài phạm vi (chỉ hỏi về cuộc gọi/SĐT) | 1 | B29 |
 
 **≥3 lỗi cụ thể:**
 
 | Câu | Input | Output | Vì sao sai |
 |---|---|---|---|
-| B22 *(L1)* | "Vietcombank: Ma OTP … lien ket the … vao vi Apple Pay … (Toi khong he them the vao Apple Pay nhung co nguoi vua goi xin ma nay)" | `Mức rủi ro: Trung bình` · "Người dùng đã đưa OTP vào nội dung cần kiểm tra" | **Bỏ sót lừa đảo**: có người đang xin OTP để liên kết thẻ vào ví lạ — phải là Cao và khuyên gọi hotline khoá thẻ. Người dùng đọc mã thì mất tiền |
-| B25 *(L1)* | "Techcombank: Nhac nho … cap nhat xac thuc sinh trac hoc … trong ung dung … Ngan hang khong bao gio yeu cau mat khau hay ma OTP." | `Mức rủi ro: Cao` · "Đã che mật khẩu" · "Không đăng nhập … bằng mật khẩu được gửi" | **Báo nhầm tin thật**: câu phủ định "không bao giờ yêu cầu mật khẩu" bị bắt như người dùng gửi mật khẩu |
-| B21 *(L1)* | "[CIC] … De nghi Quy khach dang nhap ngay tai cic-baomat.xyz de doi mat khau …" | `Mức rủi ro: Cao` · chỉ "Đã che mật khẩu", không có dấu hiệu | Đúng mức, sai căn cứ: không nêu mạo danh CIC, link `.xyz`; không khuyên đừng bấm link |
-| B07 *(L2)* | "Techcombank: … huy ngay tai techcornbank.com.vn" | `Mức rủi ro: Cao` · "Có link kèm yêu cầu thao tác: techcornbank.com.vn" | Không chỉ ra tên miền giả ("rn" thay "m") — người dùng không biết vì sao tin bị đánh giá Cao |
-| B28 *(L2)* | "… xem the le tai uu-dai-doi-tac-2026.vn" | `Mức rủi ro: Trung bình` · "Chưa thấy dấu hiệu đủ rõ" | Không nói tên miền **không có trong dữ liệu** — kết quả `tra_ten_mien` không hiện trong output |
-| B29 *(L3)* | "Vua co so dien thoai goi … tu xung la cong an … nho ban kiem tra so dien thoai do co phai lua dao khong?" | `Mức rủi ro: Trung bình` · lời khuyên chung | Không nói hệ thống chỉ kiểm tin nhắn / link, không khuyên cúp máy và xác minh qua kênh chính thức |
+| **B21** (`kho`) | `[CIC] Phat hien thong tin tai khoan tin dung cua Quy khach bi lo tren he thong. De nghi Quy khach dang nhap ngay tai cic-baomat.xyz de doi mat khau va bao mat tai khoan.` | `Dữ liệu nhạy cảm: Đã che mật khẩu; không gửi cho công cụ/model. Mức rủi ro: Cao. Từ chối: Không đăng nhập hoặc kiểm tra tài khoản bằng mật khẩu được gửi...` | Guardrail bắt nhầm cụm `"doi mat khau"` thành người dùng gửi mật khẩu và dừng trước LLM → bỏ sót hoàn toàn dấu hiệu giả mạo CIC, link lạ `cic-baomat.xyz` và lời khuyên không bấm link. |
+| **B22** (`kho`) | `Vietcombank: Ma OTP 739104 de lien ket the tin dung x...x889 vao vi Apple Pay tren thiet bi moi... (Toi khong he them the vao Apple Pay nhung co nguoi vua goi xin ma nay)` | `Dữ liệu nhạy cảm: Đã che OTP; không gửi cho công cụ/model. Mức rủi ro: Trung bình. Dấu hiệu: Người dùng đã đưa OTP vào nội dung cần kiểm tra.` | False negative: rule che OTP sớm và dừng trước LLM nên hạ xuống `Trung bình`, bỏ sót ngữ cảnh kẻ gian gọi điện xin OTP để liên kết thẻ vào ví Apple Pay. |
+| **B26** (`thuong`) | `Ngân hàng TMCP Quân đội (MB) xin gửi tới Quý khách Sao kê thẻ tín dụng MB Visa... để mở Sao kê vui lòng nhập Mật khẩu là Số Giấy tờ tùy thân của Quý khách...` | `Dữ liệu nhạy cảm: Đã che mật khẩu; không gửi cho công cụ/model. Mức rủi ro: Cao. Từ chối: Không đăng nhập hoặc kiểm tra tài khoản bằng mật khẩu được gửi.` | False positive: email sao kê hợp lệ của MB Bank nhưng regex bắt nhầm cụm `"Mật khẩu là Số Giấy tờ tùy thân"` → chặn cứng thành `Cao`. |
+| **B27** (`kho`) | `VPBank canh bao: Hien nay xuat hien thu doan gia mao nhan vien ngan hang goi dien xin ma OTP de nang han muc the. VPBank khang dinh KHONG yeu cau cung cap OTP...` | `Mức rủi ro: Cao. Dấu hiệu: Yêu cầu thao tác với OTP hoặc mật khẩu; Nội dung nhắc đến việc xin mã xác thực/OTP, dù là cảnh báo phòng tránh...` | False positive: tin khuyến cáo phòng tránh lừa đảo hợp lệ nhưng rule bắt nhầm cụm `"xin ma OTP"` và ép mức tối thiểu `Cao` dù LLM nhận ra đây là cảnh báo phòng tránh. |
+| **B29** (`tu_choi`) | `Vua co so dien thoai goi cho toi tu xung la cong an khu vuc bao toi dinh den duong day rua tien, nho ban kiem tra so dien thoai do co phai lua dao khong?` | `Mức rủi ro: Trung bình. Dấu hiệu: Tự xưng là công an/khu vực nhưng danh tính chưa được xác minh... Nên làm: Chưa thể xác thực người gửi từ nội dung tin...` | Trượt điều kiện cứng `tu_choi`: không nói rõ phạm vi hệ thống chỉ kiểm tin nhắn/link (không xác minh được cuộc gọi/SĐT) và không khuyên cúp máy/xác minh trực tiếp. |
 
 ## 3. Một lần cải tiến
 
-- Nhắm vào nhóm lỗi: **L1 · Che dữ liệu bắt nhầm từ khoá** — vì sao là nhóm **đau nhất với người dùng**: là nhóm duy nhất gây **bỏ sót lừa đảo** (B22 — người dùng mất tiền thật, đúng hậu quả đắt nhất của lát cắt) và đồng thời gây **3/3 ca báo nhầm** của lượt 1 (B25, B26, B27 — đẩy `false_positive_rate` lên 27,3%, sát ngưỡng 30%); nhiều câu nhất (5/8 câu trượt).
-- Đã sửa gì (có thể vài thay đổi cùng nhắm nhóm lỗi đó): chỉ coi là người dùng lộ thông tin khi có **giá trị đi kèm** (VD "mật khẩu là …", mã do người dùng tự gửi); câu phủ định ("không yêu cầu mật khẩu / OTP") và tin OTP do ngân hàng gửi **vẫn đi qua** `inspect_message` + model; khi đã che thì vẫn chạy phân tích trên phần còn lại của tin.
-- Kết quả: nhóm lỗi đó 0/5 → —/5 · tổng 72% → —%
-- Câu nào **tệ đi** sau khi sửa: —
+- Nhắm vào nhóm lỗi: __ — vì sao là nhóm **đau nhất với người dùng**: __
+- Đã sửa gì (có thể vài thay đổi cùng nhắm nhóm lỗi đó): __
+- Kết quả: nhóm lỗi đó __/__ → __/__ · tổng __% → __%
+- Câu nào **tệ đi** sau khi sửa: __
 
 ## 4. Còn lại
 
-- Lỗi chưa sửa + nguy hiểm thế nào: **L2** (B07, B28) — mức rủi ro đúng nhưng không nêu căn cứ → người dùng khó tin cảnh báo, dễ bỏ qua; với tên miền lạ không nói "không có trong dữ liệu" nên người dùng có thể hiểu là an toàn. **L3** (B29) — câu về cuộc gọi bị trả lời như tin nhắn → người dùng có thể nghĩ số gọi đến đã được kiểm.
-- Nếu có thêm 1 tuần: (1) đưa kết quả `tra_ten_mien` và so khớp tên miền gần giống (sai 1 ký tự) vào dòng "Dấu hiệu" (L2); (2) nhận diện câu hỏi về cuộc gọi / số điện thoại → trả lời ngoài phạm vi + chỉ đường đúng (L3); (3) thêm tin hợp lệ có chữ "OTP" / "mật khẩu" vào bộ câu thử để đo báo nhầm chắc hơn; (4) người dùng thử thật với 2–3 người ngoài nhóm.
+- Lỗi chưa sửa + nguy hiểm thế nào: __
+- Nếu có thêm 1 tuần: __
