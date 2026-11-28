@@ -121,7 +121,7 @@ def answer(text: str) -> dict:
         return {"output": "Vui lòng dán nội dung tin nhắn cần kiểm tra."}
 
     safe_text = redact_secrets(text)
-    plain_input = _plain(text)
+    plain_input = _plain(safe_text)
     refusal = _early_refusal(safe_text)
     if refusal is not None:
         return {"output": refusal}

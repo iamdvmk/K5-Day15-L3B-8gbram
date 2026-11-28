@@ -16,6 +16,7 @@ except ImportError:
 
 import streamlit as st
 from agent import answer
+from tools import redact_secrets
 
 st.set_page_config(page_title="Kiểm tin nhắn nghi giả danh ngân hàng", page_icon="🛡️")
 
@@ -25,28 +26,39 @@ st.caption(
     "Đừng dán mật khẩu hay mã OTP. Quyết định cuối cùng là của bạn."
 )
 
-msg = st.text_area("Nội dung tin nhắn", height=180, placeholder="Dán tin nhắn vào đây...")
+def check_message():
+    raw = st.session_state.message
+    if not raw.strip():
+        st.session_state.result = None
+        return
+    st.session_state.message = redact_secrets(raw)
+    try:
+        st.session_state.result = answer(raw)["output"]
+        st.session_state.check_error = None
+    except Exception as e:
+        st.session_state.result = None
+        st.session_state.check_error = f"Không gọi được model: {e}"
 
-if st.button("Kiểm tra", type="primary"):
-    if not msg.strip():
+
+st.text_area("Nội dung tin nhắn", height=180, placeholder="Dán tin nhắn vào đây...", key="message")
+
+if st.button("Kiểm tra", type="primary", on_click=check_message):
+    if not st.session_state.message.strip():
         st.info("Hãy dán nội dung tin nhắn trước.")
-    else:
-        with st.spinner("Đang kiểm tra..."):
-            try:
-                output = answer(msg)["output"]
-            except Exception as e:
-                st.error(f"Không gọi được model: {e}")
-                st.stop()
-
-        for line in output.splitlines():
-            if not line.strip():
-                continue
-            if line.startswith("Mức rủi ro"):
-                if "Cao" in line:
-                    st.error(line)
-                elif "Trung bình" in line:
-                    st.warning(line)
-                else:
-                    st.success(line)
+if st.session_state.get("check_error"):
+    st.error(st.session_state.check_error)
+if st.session_state.get("result"):
+    for line in st.session_state.result.splitlines():
+        if not line.strip():
+            continue
+        if line.startswith("Mức rủi ro"):
+            if "Cao" in line:
+                st.error(line)
+            elif "Trung bình" in line:
+                st.warning(line)
             else:
-                st.markdown(line)
+                st.success(line)
+        elif line.startswith("Dữ liệu nhạy cảm"):
+            st.warning(line)
+        else:
+            st.markdown(line)

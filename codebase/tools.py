@@ -53,7 +53,17 @@ def tra_ten_mien(link: str) -> str:
 def redact_secrets(text: str) -> str:
     """Che OTP, mật khẩu, SĐT và STK có nhãn trước khi ghi trace hoặc gọi model."""
     text = re.sub(r"(?i)(\b(?:otp|ma xac thuc|mã xác thực)\b[^\d\n]{0,60}?)\b\d(?:[ .-]?\d){3,7}\b", r"\1[ĐÃ CHE]", text)
-    text = re.sub(r"(?i)(\b(?:mat khau|mật khẩu|password)\b\s*(?:la|là|:)?\s*)\S+", r"\1[ĐÃ CHE]", text)
+    text = re.sub(
+        r"(?i)(\b(?:mat khau|mật khẩu|password)\b"
+        r"(?:\s+của\s+(?:tôi|mình|em)|\s+cua\s+(?:toi|minh|em))?\s*(?::|là|la)?\s*)\S+",
+        r"\1[ĐÃ CHE]", text,
+    )
+    text = re.sub(
+        r"(?i)(\b(?:stk|số tài khoản|so tai khoan|tài khoản số|tai khoan so)\b"
+        r"(?:\s+của\s+(?:tôi|mình|em)|\s+cua\s+(?:toi|minh|em))?\s*(?::|là|la)?\s*)"
+        r"(\d(?:[ .-]?\d){5,18})(?!\w)",
+        r"\1[ĐÃ CHE STK]", text,
+    )
     # STK không có một độ dài chung cho mọi ngân hàng: chỉ che chuỗi 6–19 chữ số
     # khi có nhãn tài khoản ngay trước nó; giữ nguyên tiền, ngày và hotline.
     text = re.sub(
