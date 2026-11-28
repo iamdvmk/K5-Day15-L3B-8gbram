@@ -6,8 +6,8 @@ README của nhóm có mục "Dùng AI vào việc gì" (2–3 dòng, bắt bu�
 
 | Việc | Công cụ AI | AI làm gì | Người kiểm/sửa gì | Ai phụ trách |
 |---|---|---|---|---|
-| Code bản chạy thử | | | | |
-| Prompt / thiết kế lời gọi mô hình | | | | |
+| Code bản chạy thử | Codex (OpenAI) | Hỗ trợ viết `codebase/ai.py`, `agent.py`, `tools.py` và test guardrail | Đọc lại luồng, kiểm kết quả mẫu, chạy unit test và `python run.py check` | Thành |
+| Prompt / thiết kế lời gọi mô hình | Codex (OpenAI) | Gợi ý system prompt trả JSON mức rủi ro và dấu hiệu, cùng quy tắc chặn sau model | Kiểm các ca link giả, lệnh chèn, OTP/mật khẩu; mức Cao do quy tắc không được model hạ | Thành |
 | Đào data (viết script đếm, gợi ý nhãn) | | | Kiểm tay __ dòng, khớp __ | |
 | Rà câu hỏi phỏng vấn / khảo sát | | Chỉ rà câu dẫn dắt | | |
 | Viết câu thử (benchmark) | | | Mỗi câu thử có `source`; câu thử AI viết được ghi rõ | |
