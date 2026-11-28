@@ -5,11 +5,12 @@
 
 ## 1. Nguồn đã dùng
 
-| Nguồn | Đạt ngưỡng? | File |
+| Nguồn | Trạng thái | Ngưỡng |
 |---|---|---|
-| Đào data (x/N, %, cách đếm chạy lại được, ≥5 ví dụ) | ☑ — 566 review đọc tay trên 70.294 review của 11 app, script chạy lại ra cùng số, 7 ví dụ | `evidence/data-mining.md` · `evidence/mine_reviews.py` · `evidence/reviews_matched.csv` |
-| Phỏng vấn (≥3 người ngoài nhóm, đúng người dùng) | ☐ — đang làm, xong sáng 28/11 | `evidence/interviews/P1.md`… |
-| Khảo sát (≥20 người ngoài nhóm, đúng người dùng) | — không dùng | — |
+| **Đào data** — review Google Play 11 app ngân hàng / ví | **Đạt ngưỡng** | x/N + % · cách chọn mẫu và cách đếm ghi trước (`data-mining.md`) · script `mine_reviews.py` chạy lại được · ≥5 ví dụ nguyên văn |
+| Số liệu / cảnh báo công khai (ngân hàng, VNCERT, Bộ Công an) | Dùng để đối chiếu kênh tin nhắn / link | Có link + ngày xem |
+| Phỏng vấn | Không dùng | — |
+| Khảo sát | Không dùng | — |
 
 **Cách chọn mẫu và cách đếm (đào data):** kéo review công khai trên Google Play của 11 app ngân hàng / ví (MoMo, Vietcombank, MB Bank, Techcombank, BIDV, VietinBank, ZaloPay, TPBank, Viettel Money, VNPAY, Cake), mỗi app 5.000 mới nhất + 5.000 "liên quan nhất", bỏ trùng → **70.294 review** (lấy ngày 27/11/2026) → lọc từ khoá ngữ cảnh lừa đảo → **566 review** → đọc tay từng review, gán `loai` + `dung_chu_de` (1 = người viết / người thân đã bị lừa, suýt bị lừa hoặc bị chiếm tài khoản). Chi tiết, tiêu chí và lệnh đếm lại: `evidence/data-mining.md` §1.
 
@@ -21,13 +22,6 @@
   - Theo app (`dung_chu_de = 1`): MoMo 4 · Viettel Money 4 · Vietcombank 3 · VietinBank 3 · Techcombank 2 · TPBank 2 · Cake 2 · MB Bank 1 · ZaloPay 1 · BIDV 0 · VNPAY 0 (mẫu số từng app ở `data-mining.md` §3).
   - **65/566 (11,5%) review nói về tính năng chống lừa / cảnh báo giả mạo của chính app**, 55/65 chấm 1–2★ — chủ yếu bị chặn khi đã tắt trợ năng, bị báo "ứng dụng giả mạo / độc hại" nhầm, không vào được app lúc cần chuyển tiền. Nhiều hơn gần 3 lần số review kể bị lừa (22).
   - 22/566 review kể cuộc gọi mạo danh — ngoài phạm vi lát cắt, không tính.
-- **Phỏng vấn:** __/3 người gặp *(n nhỏ không ghi %)* · số lần / tháng: P1 __, P2 __, P3 __ · mỗi lần mất __–__ phút — *(điền sáng 28/11)*
-
-| | Vai | Gặp pain? | Số lần / 1 tháng qua | Lần gần nhất mất | Đang xoay xở bằng |
-|---|---|---|---|---|---|
-| P1 | | | | | |
-| P2 | | | | | |
-| P3 | | | | | |
 
 ## 3. ≥5 trích dẫn hoặc ví dụ nguyên văn (có nguồn, bỏ tên)
 
@@ -45,13 +39,15 @@ Mã dòng = số dòng trong `evidence/reviews_matched.csv`. Mỗi trích dẫn 
 
 **Data nói:** pain bị lừa qua tin nhắn / link giả danh **có thật và thiệt hại rất lớn** (mất hơn 500 triệu, bị vay hộ 40 triệu, người bị lừa không lấy lại được tiền và tổng đài chỉ khuyên trình báo công an), nhưng **rất hiếm xuất hiện trong review app**: 2/70.294. Review app ngân hàng là nơi người ta chấm app, không phải nơi kể chuyện bị lừa → data **không đo được tần suất** (bao nhiêu người, bao nhiêu lần / tháng nhận tin giả, mất bao lâu để tự kiểm).
 
-**Người dùng nói:** __ *(điền sáng 28/11 sau phỏng vấn P1–P3: x/3 người nhận tin / link mang danh ngân hàng trong 1 tháng qua, họ đã làm gì, kiểm bằng cách nào, mất bao lâu)*
-
-**Khớp / lệch ở đâu, vì sao:** __
+- **Khớp:** kênh tin nhắn / link giả danh ngân hàng là thủ đoạn thật — Vietcombank, Cục ATTT / Bộ Công an đã công bố cảnh báo với tin mẫu và tên miền giả (link ở cột `source` của B19–B23 trong `eval/benchmark.csv`).
+- **Lệch:** review cho thấy kênh này rất ít được kể (2/22) → không dùng review để khẳng định tần suất; chỉ dùng để khẳng định **mức độ nghiêm trọng** khi bị lừa.
 
 ## 5. Kết luận
 
-Giả thuyết (canvas dòng 4, CP1): *"một phần đáng kể review app ngân hàng / ví kể việc nhận tin giả mạo hoặc bị lừa mất tiền"* — **sai với nguồn review**: chỉ 22/70.294 (0,03%) review kể bị lừa / bị chiếm tài khoản, và chỉ **2/22** nói đúng kênh tin nhắn / link mà lát cắt xử lý. **Phải đổi nguồn đo tần suất** sang phỏng vấn — chưa được kết luận pain "phổ biến" chỉ từ review.
+**Giả thuyết đúng một phần — phải đổi cách đo tần suất.**
+- **Đúng:** pain có thật và rất đắt — 22/566 (3,9%) review đã đọc tay kể người viết / người thân bị lừa hoặc bị chiếm tài khoản, rải ở 9/11 app; có ca mất hơn 500 triệu.
+- **Không đúng như kỳ vọng:** chỉ 2/22 nói đúng kênh tin nhắn / link giả danh ngân hàng. Review là nơi chấm app nên ít người kể chuyện bị lừa qua tin nhắn → review chỉ cho **cận dưới**, không đo được tần suất nhận tin giả.
+- **Đổi:** tần suất (bao nhiêu tin đáng ngờ / người / tháng) dùng ở `spec.md` §2 và persona chi phí là *(tự ước tính)*, ghi rõ trong spec.
 
 Điều data vẫn cho thấy:
 - Khi bị lừa thì **thiệt hại lớn và gần như không lấy lại được** → bỏ sót một tin lừa đắt hơn nhiều so với báo nhầm (khớp lựa chọn ở canvas dòng 6: ưu tiên không bỏ sót).
@@ -59,8 +55,4 @@ Giả thuyết (canvas dòng 4, CP1): *"một phần đáng kể review app ngâ
 
 Điều vẫn chưa biết: bao nhiêu khách hàng nhận tin / link giả danh ngân hàng mỗi tháng · họ tự kiểm bằng cách nào và mất bao lâu · bao nhiêu người từng (suýt) làm theo → hỏi ở phỏng vấn P1–P3.
 
-## Lịch hẹn (dùng cho CP2 — chỉ ghi vai và giờ, không tên)
-
-| Vai | Giờ hẹn | Đã xong? |
-|---|---|---|
-| | | |
+Người viết review thường là người đang bực (lệch 1★) · bộ lọc từ khoá bỏ sót review không dùng từ trong danh sách · nhãn do 1 người gán · không có phỏng vấn / khảo sát kiểm lại tần suất.

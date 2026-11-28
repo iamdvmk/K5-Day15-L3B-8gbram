@@ -43,7 +43,7 @@ Dataset nào, xử lý gì: tóm 2–3 dòng từ `data/DATA_CARD.md`.
 
 | Lượt | Run ID | Model | Cấu hình (prompt / công cụ / thay đổi) | Đạt / tổng | % | Đạt chuẩn? |
 |---|---|---|---|---|---|---|
-| 1 | | | | __/__ | | |
+| 1 | run-1@20261128-091914 | gpt-4o-mini-2024-07-18 | Quy tắc trước model + `tra_ten_mien`; nhánh che dữ liệu theo từ khoá | 21/29 (72,4%) · thuong 12/14 · kho 7/12 · tu_choi 2/3 | Lỗi chính: nhánh che dữ liệu bắt nhầm (L1) |
 | 2 | | | | __/__ | | |
 
 Lượt chạy lại vì lỗi kỹ thuật, lượt sau CP4: ghi thêm dòng, không sửa dòng cũ.
