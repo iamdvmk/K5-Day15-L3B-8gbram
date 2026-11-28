@@ -131,7 +131,8 @@ flowchart LR
 
 | Thời điểm | Đổi gì | Vì sao (trỏ về câu thử / lỗi / bằng chứng nào) |
 |---|---|---|
-|  |  |  |
+| 27/11, sau CP2 (giờ chi tiết chưa ghi) | Nối model thật trong `ai.py`, thay mock bằng quyết định model trong `agent.py` | Nối sản phẩm từ luồng mock thành luồng thật có thể gọi AI Model |
+| 27/11 21:50 | Cập nhật README và `docs/ai-usage.md` | Làm thống nhắt format chỉnh sửa và ghi AI log |
 
 **Sau CP4 (đến 23:59 Thứ Bảy 28/11)** (sửa theo góp ý — không sửa chuẩn "đạt", câu thử, số bằng chứng, kết quả các lượt đã chạy)
 
