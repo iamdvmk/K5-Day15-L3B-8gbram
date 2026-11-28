@@ -160,8 +160,8 @@ flowchart LR
   - **Người dùng ỷ lại** vào kết quả `Thấp` → dòng "Giới hạn: không xác thực được người gửi" luôn in kèm.
 
 ## §10. Phân công & changelog
-- Phân công có tên (theo chặng, chia cặp — guide "Cách chia việc"): __
-- Dùng AI vào việc gì (2–3 dòng; chi tiết `docs/ai-usage.md`):
+- Phân công có tên: Khánh (đội trưởng) — spec, canvas, điều phối, chi phí, slide, nộp form · Thành — bản chạy thử, nối model, guardrail, video · Phát — đào review, bằng chứng, DATA_CARD, data tên miền · Vũ — bộ câu thử, metric, chấm lượt 1–2, report
+- Dùng AI vào việc gì: xem `docs/ai-usage.md`
 - Nhật ký thay đổi — **mọi thay đổi sau CP2 19:30 Thứ Sáu 27/11 phải có dòng ở đây**:
 
 **CP2 → CP4** (vd thu hẹp lát cắt, hỏi thêm người dùng, lần cải tiến trước lượt 2)
@@ -176,6 +176,7 @@ flowchart LR
 | 28/11 | Sửa guardrail: từ chối xác minh cuộc gọi / SĐT / ảnh, bắt thêm mẫu lệnh chèn, tách xử lý OTP (Thành) → lượt 2 `run-2@20261128-104318` 24/29 | cải tiến nhắm câu ngoài phạm vi B29 (điều kiện cứng 100% `tu_choi`) |
 | 28/11 | Sửa `cost/personas.yaml` (giá gpt-5.4-mini / nano, quy mô 10k / 50k / 200k), chạy `simulate-1`, viết `cost/cost-estimate.md`, đồng bộ §2, điền §8 | mô phỏng chi phí CP4 |
 | 28/11 | Điền §9, sửa §0, §4 (bảng công cụ, phần còn giả), §7 (số câu) | hoàn thiện spec cho CP4 |
+| 28/11 | Thêm `app.py` (giao diện Streamlit gọi lại `answer()`, không đổi logic) | phục vụ demo; kết quả đo vẫn là lượt 2 |
 
 **Sau CP4 (đến 23:59 Thứ Bảy 28/11)** (sửa theo góp ý — không sửa chuẩn "đạt", câu thử, số bằng chứng, kết quả các lượt đã chạy)
 

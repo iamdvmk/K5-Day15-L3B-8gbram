@@ -3,45 +3,45 @@
 # Mọi số phải có nguồn (data / phỏng vấn / khảo sát / quy mô khoá có nguồn) hoặc ghi rõ "(tự ước tính)".
 # Chạy: python run.py simulate --try   (10 phiên, kiểm khung — làm trước CP3)
 #       python run.py simulate         (đủ số phiên dưới đây — bản nộp CP4)
-# Thay mọi dòng "(ví dụ)" bằng số và nguồn của nhóm; simulate nhắc nếu còn sót.
 
 sessions: 50        # số phiên mô phỏng — bản nộp ≥50
 seed: 42            # giữ cố định để chạy lại ra cùng chuỗi phiên
 
-users:              # quy mô người dùng thật cho tính năng kiểm tin nhắn trên 1 app ngân hàng / ví tầm trung tại VN
+users:              # số người dùng thật nếu đưa vào dùng — 3 kịch bản
   low: 10000
   base: 50000
   high: 200000
-  source: "Track E - quy mô triển khai tính năng trên 1 app ngân hàng / ví tầm trung tại Việt Nam: thấp 10.000 (nhóm pilot ban đầu), cơ sở 50.000 (nhóm khách hàng dùng thường xuyên), cao 200.000 (mở rộng đại trà) - (tự ước tính, sẽ đối chiếu thêm quy mô app ở spec.md §2)"
+  source: "(tự ước tính) quy mô người dùng tính năng kiểm tin nhắn trong 1 app ngân hàng / ví tầm trung tại VN: thấp = thí điểm, cơ sở = một phần nhỏ khách hàng số, cao = mở rộng toàn app"
 
-personas:           # 3 kiểu người dùng app ngân hàng / ví; tổng share = 1.0
+personas:           # ≥3 kiểu người dùng; share cộng lại = 1
   - name: dung_it
-    share: 0.60             # 60% khách hàng chỉ dán kiểm tra khi gặp tin nhắn/link thật sự đáng ngờ
-    uses_per_month: 2       # ~2 lần / tháng
-    turns_per_session: 1    # 1 lượt dán tin nhắn / phiên
-    source: "(tự ước tính) khách hàng phổ thông chỉ kiểm tra khi nhận tin nghi vấn — cập nhật theo phỏng vấn P1–P3 nếu có số"
+    share: 0.6
+    uses_per_month: 2
+    turns_per_session: 1
+    source: "(tự ước tính) chỉ kiểm khi gặp tin nhắn / link thật sự đáng ngờ"
   - name: dung_vua
-    share: 0.30             # 30% khách hàng giao dịch online thường xuyên, hay nhận SMS/Zalo ưu đãi & thông báo
-    uses_per_month: 6       # ~6 lần / tháng
-    turns_per_session: 2    # 2 lượt / phiên (kiểm tin + kiểm thêm link/tin liên quan)
-    source: "(tự ước tính) khách hàng mua sắm/giao dịch online nhiều — cập nhật theo phỏng vấn P1–P3 nếu có số"
+    share: 0.3
+    uses_per_month: 6
+    turns_per_session: 2
+    source: "(tự ước tính) giao dịch online thường xuyên, hay nhận SMS / Zalo ưu đãi"
   - name: dung_nhieu
-    share: 0.10             # 10% chủ shop online hoặc người dùng thận trọng / người lớn tuổi kiểm tra nhiều tin nhắn
-    uses_per_month: 15      # ~15 lần / tháng
-    turns_per_session: 2    # 2 lượt / phiên
+    share: 0.1
+    uses_per_month: 15
+    turns_per_session: 2
     types: [thuong, kho, tu_choi]
-    source: "(tự ước tính) nhóm người dùng nhận nhiều tin chuyển khoản/lừa đảo hoặc kiểm tra thay cho người thân"
+    source: "(tự ước tính) chủ shop online, người thận trọng hoặc người lớn tuổi hay nhận tin rác; hỏi cả câu khó và câu ngoài phạm vi"
+# Mỗi lượt hỏi lấy ngẫu nhiên một đầu vào trong eval/benchmark.csv (type thuong và kho, trừ persona có `types`).
 
-prices:             # USD / 1 triệu token — chép từ further-reading/model-prices.md của repo đề. ≥2 mức model
-  - model: gemini-3.1-flash-lite
-    input: 0.25
-    output: 1.50
-    source: "https://ai.google.dev/gemini-api/docs/pricing - xem 25/11/2026"
-  - model: gemini-4-hydrogen
-    input: 1.50
-    output: 7.50
-    source: "https://ai.google.dev/gemini-api/docs/pricing - xem 25/11/2026"
+prices:             # USD / 1 triệu token — giá gói trả phí (Standard), ≥2 mức model
+  - model: gpt-5.4-mini-2026-03-17
+    input: 0.75
+    output: 4.50
+    source: "https://developers.openai.com/api/docs/models/gpt-5.4-mini · xem 28/11/2026 · model đã dùng cho lượt 1, lượt 2 và mô phỏng"
+  - model: gpt-5.4-nano
+    input: 0.20
+    output: 1.25
+    source: "https://developers.openai.com/docs/models/gpt-5.4-nano · xem 28/11/2026 · mức rẻ hơn, chỉ để so sánh — tính trên số token đo bằng gpt-5.4-mini, chưa chạy lượt nào trên nano"
 
 usd_to_vnd:
   rate: 25400
-  source: "Tỉ giá tham khảo ~25.400 VND/USD (tự ước tính làm tròn, xem 28/11/2026)"
+  source: "(tự ước tính) tỉ giá tham khảo làm tròn · 28/11/2026"
