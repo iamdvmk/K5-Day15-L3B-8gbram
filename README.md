@@ -123,6 +123,5 @@ ____
 | 4 | Bản chạy thử làm trọn lát cắt | `codebase/` · lệnh ở mục "Lệnh" |
 | 5 | Định nghĩa "tốt" + bộ câu thử | `data/DATA_CARD.md` · `eval/` |
 | 6 | Mô phỏng chi phí khi dùng thật | `cost/` |
-| 7 | Slide + demo + video dự phòng | slide trong repo (PDF, PPTX, HTML…) hoặc link slide ở form CP4 · link video CP3 (30s AI thật): https://drive.google.com/file/d/123Ot9i5RtedxAsP4sHz8Dk_D33SZsh5r/view?usp=sharing
-- link video demo dự phòng (CP4): https://drive.google.com/file/d/1gHNF7ZXHtaM9FW4Wd_YKjwJnMd-iBv8e/view?usp=sharing |
+| 7 | Slide + demo + video dự phòng | slide trong repo (PDF, PPTX, HTML…) hoặc link slide ở form CP4 · link video CP3 (30s AI thật): https://drive.google.com/file/d/123Ot9i5RtedxAsP4sHz8Dk_D33SZsh5r/view?usp=sharing · link video demo dự phòng (CP4): https://drive.google.com/file/d/1gHNF7ZXHtaM9FW4Wd_YKjwJnMd-iBv8e/view?usp=sharing |
 | + | *Bonus:* người dùng thử | `validation/log.md` |
