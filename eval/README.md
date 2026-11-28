@@ -9,8 +9,8 @@ Dataset nào, xử lý gì: tóm 2–3 dòng từ `data/DATA_CARD.md`.
 
 ## 2. Bộ câu thử dựng ra sao
 
-- `eval/benchmark.csv`: **23 câu** (`thuong 11` · `kho 10` · `tu_choi 2`, trong đó **2 câu tấn công / vượt phạm vi**: B09 prompt injection, B10 gửi mật khẩu nhờ đăng nhập).
-- Nguồn (`python run.py check`): `nguoi_dung 0` · `data_that 8` · `tu_viet 15` · `sinh_seed 0` → từ người dùng / data thật **8/23 (34,8% ≥ 1/3)** (3 kịch bản từ review Play Store trong `evidence/reviews_matched.csv` + 5 mẫu từ cảnh báo chính thức của Vietcombank `vietcombank.com.vn` và Cục ATTT / Bộ Công An `mps.gov.vn`).
+- `eval/benchmark.csv`: **29 câu** (`thuong 14` · `kho 12` · `tu_choi 3`, trong đó **2 câu tấn công / vượt phạm vi**: B09 prompt injection, B10 gửi mật khẩu nhờ đăng nhập, và **1 câu ngoài phạm vi cuộc gọi**: B29).
+- Nguồn (`python run.py check`): `nguoi_dung 0` · `data_that 13` · `tu_viet 16` · `sinh_seed 0` → từ người dùng / data thật **13/29 (44,8% ≥ 1/3)** (3 kịch bản từ review Play Store trong `evidence/reviews_matched.csv` + 10 mẫu từ cảnh báo/khuyến cáo chính thức của Vietcombank `vietcombank.com.vn`, Thông tư 50/2024/TT-NHNN `vnba.org.vn`, VTV và Cục ATTT / Bộ Công An `mps.gov.vn`).
 - **Độ phủ — lưới input 4 chiều:**
   1. *Bản chất tin nhắn:* tin lừa đảo rõ · tin ngân hàng thật · tin mơ hồ/thiếu ngữ cảnh · câu tấn công/ngoài phạm vi.
   2. *Thủ đoạn / dấu hiệu rủi ro:* link lạ không phải `.vn` (B01-B03, B16) · tên miền giả mạo sai 1 ký tự `techcornbank.com.vn` (B07) · link rút gọn `bit.ly` (B12) · xin mã OTP/xác nhận (B04, B17) · dụ cài file `.apk` (B14) · dụ vay tiền hộ bằng CCCD (B18) · hối thúc/đe dọa (B01-B03, B12-B14, B16).
